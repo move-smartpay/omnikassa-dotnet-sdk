@@ -4,6 +4,7 @@
     "currency": "EUR",
     "amount": "495"
   },
+  "enableCardOnFile": false,
   "language": "NL",
   "description": "An example description",
   "merchantReturnURL": "http://localhost/",
@@ -36,6 +37,7 @@
     "city": "Utrecht",
     "countryCode": "NL"
   },
+  "shopperRef": null,
   "billingDetail": {
     "firstName": "Developer",
     "middleName": "van",
