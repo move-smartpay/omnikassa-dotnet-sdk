@@ -23,6 +23,8 @@ namespace OmniKassa.Http
         private static readonly string PATH_POST_REFUND_REQUEST = "order/server/api/v2/refund/transactions/{0}/refunds";
         private static readonly string PATH_GET_REFUND_REQUEST = "order/server/api/v2/refund/transactions/{0}/refunds/{1}";
         private static readonly string PATH_GET_REFUNDABLE_DETAILS_REQUEST = "order/server/api/v2/refund/transactions/{0}/refundable-details";
+        private static readonly string PATH_GET_SHOPPER_PAYMENT_DETAILS = "v1/shopper-payment-details";
+        private static readonly string PATH_DELETE_SHOPPER_PAYMENT_DETAILS = "v1/shopper-payment-details/{0}";
 
         private static readonly string HEADER_REFUND_REQUEST_ID = "request-id";
         private static readonly string HEADER_X_API_USER_AGENT = "X-Api-User-Agent";
