@@ -162,6 +162,28 @@ namespace OmniKassa
                 return await httpClient.RetrieveIdealIssuers(tokenProvider.GetAccessToken());
             }
         }
+        
+        
+        /// <summary>
+        /// Retrieves the order status by order ID
+        /// </summary>
+        /// <param name="orderId">Order ID</param>
+        /// <returns>Order status response</returns>
+        public async Task<OrderStatusResponse> RetrieveOrder(String orderId)
+        {
+            await ValidateAccessToken();
+
+            try
+            {
+                return await httpClient.GetOrderById(orderId, tokenProvider.GetAccessToken());
+            }
+            catch (InvalidAccessTokenException)
+            {
+                await RetrieveNewToken();
+                
+                return await httpClient.GetOrderById(orderId, tokenProvider.GetAccessToken());
+            }
+        }
 
         /// <summary>
         /// Retrieves a new access token

@@ -157,6 +157,17 @@ namespace OmniKassa.Http
             };
             string path = uriBuilder.Uri.PathAndQuery;
             return DeleteAsync(mClient, path, token);
+				}
+
+        /// Retrieves the order status by order ID
+        /// </summary>
+        /// <param name="orderId">Order ID</param>
+        /// <param name="token">Access token</param>
+        /// <returns>Order status response</returns>
+        public Task<OrderStatusResponse> GetOrderById(String orderId, String token)
+        {
+            string path = string.Format(PATH_GET_ORDER_BY_ID, orderId);
+            return GetAsync<OrderStatusResponse>(mClient, path, token);
         }
 
         private async Task<T> PostAsync<T>(HttpClient client, string path, Dictionary<string, string> headers, string token, object input) where T : class

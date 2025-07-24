@@ -164,6 +164,17 @@ namespace OmniKassa
         }
 
         /// <summary>
+        /// Retrieves the order status by order ID
+        /// </summary>
+        /// <param name="orderId">Order ID</param>
+        /// <returns>Order status response</returns>
+        public OrderStatusResponse RetrieveOrder(String orderId)
+        {
+            ValidateAccessToken();
+            return httpClient.GetOrderById(orderId, tokenProvider.GetAccessToken());
+        }
+
+        /// <summary>
         /// Retrieves a new access token
         /// </summary>
         public void RetrieveNewToken()
