@@ -50,3 +50,27 @@ Installation instructions and detailed developer documentation on how to use the
 * Extended SDK to allow the payment result page (also known as the 'thank-you' page) to be skipped in the payment process.
 * Extended SDK to allow the name of the customer to be passed in the order announcement.
 * Added support for .NET 5.
+
+
+## Docker configuration
+
+### Dev and test containers
+
+The compose file contains services for dev and test. Dev containers use volume mapping, test containers copy the source into the container.
+This makes cross-platform development easier, as the test containers can be run from any platform, as long as the Docker engine uses the 
+appropriate platform (Linux or Windows) for the container.
+
+### Running the tests
+
+To run the tests, you can use the following command:
+
+```bash
+docker compose up --build TARGET_SERVICE
+```
+
+For example:
+```bash
+docker compose up --build netcore6-windows-test
+```
+
+For the target services, see the `compose.yaml` file, any service that ends with `-test` can be used as a target service.
