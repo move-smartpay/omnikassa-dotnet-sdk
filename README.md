@@ -11,11 +11,12 @@ Installation instructions and detailed developer documentation on how to use the
 ## Release notes
 
 ### Version 1.6.0
+* Add Docker configuration for development and testing.
+* Add GitHub workflow for PR testing.
 * Add support for the OrderStatus API.
 * Add support for 'Card on File'
 * Add support for 'Fast checkout'
 * Removed support for older .NET versions (EOL) and updated target frameworks.
-* Removed .NET Core 3.1 sample project.
 
 ### Version 1.5.0
 * Added partner reference support
