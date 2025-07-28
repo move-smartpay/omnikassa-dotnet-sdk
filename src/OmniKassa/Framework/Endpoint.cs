@@ -1,4 +1,4 @@
-﻿#if NET462
+﻿#if NETFRAMEWORK
 
 using OmniKassa.Exceptions;
 using OmniKassa.Model;
