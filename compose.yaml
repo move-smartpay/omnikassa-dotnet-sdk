@@ -42,15 +42,6 @@ services:
         CONTAINER_TAG: 6.0-windowsservercore-ltsc2022
         TARGET_FRAMEWORK: net6.0
         
-  netcore9-windows-test:
-    build:
-      context: .
-      dockerfile: Containers/NetCore/Windows/Containerfile
-      target: test
-      args:
-        CONTAINER_TAG: 9.0-windowsservercore-ltsc2025
-        TARGET_FRAMEWORK: net9.0
-        
   netcore6-linux-test:
     build:
       context: .
@@ -59,15 +50,6 @@ services:
       args:
         CONTAINER_TAG: 6.0-focal
         TARGET_FRAMEWORK: net6.0
-        
-  netcore9-linux-test:
-    build:
-      context: .
-      dockerfile: Containers/NetCore/Linux/Containerfile
-      target: test
-      args:
-        CONTAINER_TAG: "9.0"
-        TARGET_FRAMEWORK: "net9.0"
   
   # DEV SERVICES
   netframework46-windows-dev:

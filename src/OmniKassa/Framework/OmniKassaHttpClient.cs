@@ -179,7 +179,7 @@ namespace OmniKassa.Http
             };
             string path = uriBuilder.Uri.PathAndQuery;
             DeleteAsync(mClient, path, token);
-				}
+		}
 
         /// Retrieves the order status by order ID
         /// </summary>
