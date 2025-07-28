@@ -10,6 +10,14 @@ Installation instructions and detailed developer documentation on how to use the
 
 ## Release notes
 
+### Version 1.5.0
+
+* Add support for the OrderStatus API.
+* Add support for 'Card on File'
+* Add support for 'Fast checkout'
+* Removed support for older .NET versions (EOL) and updated target frameworks.
+* Removed .NET Core 3.1 sample project.
+
 ### Version 1.4.0
 * Extended SDK to support refunds.
 * Added support for .NET 6.
