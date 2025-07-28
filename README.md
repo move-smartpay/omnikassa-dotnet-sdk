@@ -66,6 +66,9 @@ The compose file contains services for dev and test. Dev containers use volume m
 This makes cross-platform development easier, as the test containers can be run from any platform, as long as the Docker engine uses the 
 appropriate platform (Linux or Windows) for the container.
 
+As volume mapping generally doesn't work cross-platform, you should use a 'matching' platform for development. For testing only 
+the Docker engine platform is relevant. Linux containers can run on any platform, Windows containers can only run on Windows.
+
 ### Running the tests
 
 To run the tests, you can use the following command:
@@ -80,3 +83,21 @@ docker compose up --build netcore6-windows-test
 ```
 
 For the target services, see the `compose.yaml` file, any service that ends with `-test` can be used as a target service.
+
+### Using the dev containers
+
+To use the dev containers, you can use the following command:
+
+```bash
+docker compose run --rm TARGET_SERVICE shell
+```
+
+For example (Linux):
+```bash
+docker compose run --rm netcore6-linux-dev /bin/bash
+```
+
+For example (Windows):
+```bash
+docker compose run --rm netframework46-windows-dev cmd.exe
+```
