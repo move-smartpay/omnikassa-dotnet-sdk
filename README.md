@@ -10,13 +10,19 @@ Installation instructions and detailed developer documentation on how to use the
 
 ## Release notes
 
+### Version 1.6.0
+* Add support for the OrderStatus API.
+* Add support for 'Card on File'
+* Add support for 'Fast checkout'
+* Removed support for older .NET versions (EOL) and updated target frameworks.
+* Removed .NET Core 3.1 sample project.
+
 ### Version 1.5.0
 * Added partner reference support
 * Added UserAgent support
 * Added shopperBankStatementReference support
 * Added .NET 7 and 8 to target frameworks, and removed netstandard targets
 * Migrated .NET 4.6.2 sample to .NET 6.0
-
 
 ### Version 1.4.0
 * Extended SDK to support refunds.
