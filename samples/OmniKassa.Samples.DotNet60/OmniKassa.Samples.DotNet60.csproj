@@ -16,4 +16,13 @@
     <ProjectReference Include="..\..\src\OmniKassa\OmniKassa.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.8" />
+  </ItemGroup>
+
 </Project>

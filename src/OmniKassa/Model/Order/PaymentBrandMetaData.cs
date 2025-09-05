@@ -72,8 +72,8 @@ namespace OmniKassa.Model.Order
         }
         
         private bool EqualsPaymentBrandMetaData(
-            IReadOnlyList<RequiredCheckoutField> one,
-            IReadOnlyList<RequiredCheckoutField> two)
+            IReadOnlyList<RequiredCheckoutFields> one,
+            IReadOnlyList<RequiredCheckoutFields> two)
         {
             // Handle empty dictionaries as null
             var tmpOne = one != null && one.Count > 0 ? one : null;

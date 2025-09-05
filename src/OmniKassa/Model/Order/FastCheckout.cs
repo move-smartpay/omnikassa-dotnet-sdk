@@ -20,13 +20,13 @@ namespace OmniKassa.Model.Order
         /// Note: This field is needed only for the fast-checkout flow. At least one value must be defined.
         /// </summary>
         [JsonProperty(PropertyName = "requiredCheckoutFields")]
-        public IReadOnlyList<RequiredCheckoutField> RequiredCheckoutFields { get; private set; }
+        public IReadOnlyList<RequiredCheckoutFields> RequiredCheckoutFields { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="requiredCheckoutFields">List of required checkout fields</param>
-        public FastCheckout(IReadOnlyList<RequiredCheckoutField> requiredCheckoutFields)
+        public FastCheckout(IReadOnlyList<RequiredCheckoutFields> requiredCheckoutFields)
         {
             RequiredCheckoutFields = requiredCheckoutFields;
         }

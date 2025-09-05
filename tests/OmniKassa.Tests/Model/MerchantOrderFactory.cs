@@ -25,7 +25,7 @@ namespace OmniKassa.Tests.Model
                     .WithPaymentBrand(PaymentBrand.IDEAL)
                     .WithPaymentBrandForce(PaymentBrandForce.FORCE_ALWAYS)
                     .WithPaymentBrandMetaData(new Dictionary<string,string>{{"issuerId", "RABONL2U"}})
-                    .WithPaymentBrandFastCheckout(new FastCheckout(new List<RequiredCheckoutField> { RequiredCheckoutField.BILLING_ADDRESS }))
+                    .WithPaymentBrandFastCheckout(new FastCheckout(new List<RequiredCheckoutFields> { RequiredCheckoutFields.BILLING_ADDRESS }))
                     .WithShippingCost(Money.FromDecimal(Currency.EUR, 12.34m))
                     .WithInitiatingParty("LIGHTSPEED")
                     .WithSkipHppResultPage(true)
