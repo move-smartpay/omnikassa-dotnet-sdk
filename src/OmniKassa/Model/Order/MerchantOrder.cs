@@ -98,10 +98,10 @@ namespace OmniKassa.Model.Order
         /// Only used for the iDeal issuerId. This dictionary is for backwards compatibility.
         /// For fast checkout, use <see cref="Builder.WithPaymentBrandFastCheckout(FastCheckout)"/>.
         /// </summary>
-        public IReadOnlyDictionary<string, string> PaymentBrandMetaData {
+        public IReadOnlyDictionary<string, Object> PaymentBrandMetaData {
             get
             {
-                var metaData = new Dictionary<string, string>();
+                var metaData = new Dictionary<string, Object>();
 
                 if (String.IsNullOrEmpty(paymentBrandMetaData?.IssuerId) == false)
                 {
@@ -116,7 +116,7 @@ namespace OmniKassa.Model.Order
                 {
                     if (keyValue.Key.ToLower() == "issuerid")
                     {
-                        paymentBrandMetaData.IssuerId = keyValue.Value;
+                        paymentBrandMetaData.IssuerId = keyValue.Value.ToString();
                     }
                 }
             }
@@ -271,7 +271,7 @@ namespace OmniKassa.Model.Order
             if (PaymentBrandMetaData != null)
             {
                 var orderedMetaData = PaymentBrandMetaData.OrderBy(kvp => kvp.Key, StringComparer.Ordinal);
-                foreach (KeyValuePair<string, string> result in orderedMetaData)
+                foreach (KeyValuePair<string, Object> result in orderedMetaData)
                 {
                     hash = (hash * -1521134295) + result.Key.GetHashCode();
                     hash = (hash * -1521134295) + result.Value.GetHashCode();
