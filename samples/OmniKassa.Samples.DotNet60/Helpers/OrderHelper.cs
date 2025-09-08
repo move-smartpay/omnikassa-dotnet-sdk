@@ -75,7 +75,7 @@ namespace example_dotnet60.Helpers
             CustomerInformation customerInformation = CreateCustomerInformation(collection);
             PaymentBrand? paymentBrand = CreatePaymentBrand(collection);
             PaymentBrandForce? paymentBrandForce = CreatePaymentBrandForce(collection);
-            Dictionary<string, string> paymentBrandMetaData = CreatePaymentBrandMetaData(collection);
+            Dictionary<string, Object> paymentBrandMetaData = CreatePaymentBrandMetaData(collection);
             string initiatingParty = GetInitiatingParty(collection);
             bool skipHppResultPage = GetSkipHppResultPage(collection);
             string shopperBankstatementReference = GetShopperBankstatementReference(collection);
@@ -150,12 +150,12 @@ namespace example_dotnet60.Helpers
             return GetEnum<PaymentBrandForce>(paymentBrandForce);
         }
 
-        private static Dictionary<string, string> CreatePaymentBrandMetaData(NameValueCollection collection)
+        private static Dictionary<string, Object> CreatePaymentBrandMetaData(NameValueCollection collection)
         {
             String idealIssuer = collection.Get("idealIssuer");
             if (String.IsNullOrEmpty(idealIssuer))
                 return null;
-            return new Dictionary<string, string>() {
+            return new Dictionary<string, Object>() {
                 { ISSUER_ID, idealIssuer }
             };
         }

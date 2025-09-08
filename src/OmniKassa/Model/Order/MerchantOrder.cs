@@ -466,7 +466,7 @@ namespace OmniKassa.Model.Order
             /// </summary>
             /// <param name="paymentBrandMetaData">Optional</param>
             /// <returns>Builder</returns>
-            public Builder WithPaymentBrandMetaData(Dictionary<string, string> paymentBrandMetaData)
+            public Builder WithPaymentBrandMetaData(IReadOnlyDictionary<string, Object> paymentBrandMetaData)
             {
                 if (paymentBrandMetaData == null)
                 {
@@ -479,7 +479,7 @@ namespace OmniKassa.Model.Order
                     {
                         PaymentBrandMetaData = new PaymentBrandMetaData();
                     }
-                    PaymentBrandMetaData.IssuerId = value;
+                    PaymentBrandMetaData.IssuerId = value.ToString();
                 }
 
                 return this;

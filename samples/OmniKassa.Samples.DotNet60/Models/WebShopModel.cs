@@ -60,7 +60,7 @@ namespace example_dotnet60.Models
                     .WithCustomerInformation(Order.CustomerInformation)
                     .WithPaymentBrand(Order.PaymentBrand)
                     .WithPaymentBrandForce(Order.PaymentBrandForce)
-                    .WithPaymentBrandMetaData(new Dictionary<string, string>(Order.PaymentBrandMetaData))
+                    .WithPaymentBrandMetaData(new Dictionary<string, Object>(Order.PaymentBrandMetaData))
                     .WithInitiatingParty(Order.InitiatingParty)
                     .WithSkipHppResultPage(Order.SkipHppResultPage)
                     .WithShopperBankstatementReference(Order.ShopperBankstatementReference)
@@ -96,7 +96,7 @@ namespace example_dotnet60.Models
                                                   Address billingDetails,
                                                   PaymentBrand? paymentBrand,
                                                   PaymentBrandForce? paymentBrandForce,
-                                                  Dictionary<string, string> paymentBrandMetaData,
+                                                  Dictionary<string, Object> paymentBrandMetaData,
                                                   string initiatingParty,
                                                   bool skipHppResultPage,
                                                   string shopperBankstatementReference)
