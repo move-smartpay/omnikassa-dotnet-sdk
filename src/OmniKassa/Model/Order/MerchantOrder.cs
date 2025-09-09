@@ -485,6 +485,11 @@ namespace OmniKassa.Model.Order
                 return this;
             }
 
+            /// <summary>
+            /// Can be used for creating a fast checkout order.
+            /// </summary>
+            /// <param name="fastCheckout"></param>
+            /// <returns></returns>
             public Builder WithPaymentBrandFastCheckout(FastCheckout fastCheckout)
             {
                 if (PaymentBrandMetaData == null)
@@ -542,7 +547,8 @@ namespace OmniKassa.Model.Order
                 return this;
 						}
 
-            /// - Order shipping cost amount in cents. Only used for display purposes. Does not influence order total.
+            /// <summary>
+            /// Order shipping cost amount in cents. Only used for display purposes. Does not influence order total.
             /// </summary>
             /// <param name="shippingCost">Shipping cost amount</param>
             /// <returns>Builder</returns>

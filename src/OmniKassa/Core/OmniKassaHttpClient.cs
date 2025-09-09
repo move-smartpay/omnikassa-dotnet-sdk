@@ -157,8 +157,9 @@ namespace OmniKassa.Http
             };
             string path = uriBuilder.Uri.PathAndQuery;
             return DeleteAsync(mClient, path, token);
-				}
+		}
 
+        /// <summary>
         /// Retrieves the order status by order ID
         /// </summary>
         /// <param name="orderId">Order ID</param>
@@ -218,6 +219,8 @@ namespace OmniKassa.Http
             String result = await response.Content.ReadAsStringAsync();
             return ProcessResult<T>(result);
         }
+
+
     }
 }
 

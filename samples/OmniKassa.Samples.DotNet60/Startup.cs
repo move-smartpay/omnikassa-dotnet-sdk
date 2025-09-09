@@ -33,7 +33,7 @@ namespace example_dotnet60
         {
             var refreshToken = configuration.GetValue<string>("RefreshToken");
             var signingKey = configuration.GetValue<string>("SigningKey");
-            var callbackUrl = configuration.GetValue<string>("CallbackUrl", "http://localhost:52060/Home/Callback/");
+            var callbackUrl = configuration.GetValue<string>("CallbackUrl", "http://localhost:5000/Home/Callback/");
             var baseUrl = configuration.GetValue<string>("BaseUrl");
             var userAgent = configuration.GetValue<string>("UserAgent");
             var partnerReference = configuration.GetValue<string>("PartnerReference");

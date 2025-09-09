@@ -27,6 +27,8 @@ namespace example_dotnet60.Models
         public RefundDetailsResponse RefundDetailsResponse { get; set; }
         public TransactionRefundableDetailsResponse TransactionRefundableDetailsResponse { get; set; }
 
+        public List<CardOnFile> CardOnFileResponses { get; set; } = new List<CardOnFile>();
+
         public string Error { get; set; }
 
         public WebShopModel()
@@ -147,6 +149,15 @@ namespace example_dotnet60.Models
                 return IdealIssuersResponse.IdealIssuers;
             }
             return new List<IdealIssuer>();
+        }
+
+        public List<CardOnFile> GetCardsOnFile()
+        {
+            if (CardOnFileResponses != null)
+            {
+                return CardOnFileResponses;
+            }
+            return new List<CardOnFile>();
         }
     }
 }

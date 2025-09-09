@@ -30,6 +30,7 @@ namespace example_dotnet60.Controllers
         private readonly string PARTNER_REFERENCE;
 
         private static string SESSION_WEBSHOP_MODEL = "WEBSHOP_MODEL";
+        private static string SHOPPER_REFERENCE = "omnikassa-sample";
 
         private static Endpoint omniKassa;
 
@@ -138,6 +139,7 @@ namespace example_dotnet60.Controllers
             ViewBag.ShippingAddressCountryItems = WebShopViewData.GetShippingAddressCountryItems(model.Order);
             ViewBag.BillingDetails = model.Order.BillingDetails;
             ViewBag.BillingAddressCountryItems = WebShopViewData.GetBillingAddressCountryItems(model.Order);
+            //ViewBag.I
         }
 
         [HttpPost]
@@ -387,7 +389,8 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
             try
             {
-                webShopModel.PaymentBrandsResponse = await omniKassa.RetrievePaymentBrands();
+                var paymentBrands = await omniKassa.RetrievePaymentBrands();
+                webShopModel.PaymentBrandsResponse = paymentBrands;
             }
             catch (RabobankSdkException ex)
             {
@@ -404,7 +407,8 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
             try
             {
-                webShopModel.IdealIssuersResponse = await omniKassa.RetrieveIdealIssuers();
+                var idealIssuers = await omniKassa.RetrieveIdealIssuers();
+                webShopModel.IdealIssuersResponse = idealIssuers;
             }
             catch (RabobankSdkException ex)
             {
@@ -435,6 +439,43 @@ namespace example_dotnet60.Controllers
                 collection.Add(key, value);
             }
             return collection;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RetrieveShopperPaymentDetails()
+        {
+            InitWebshopModel();
+            try
+            {
+                string shopperRef = SHOPPER_REFERENCE;
+                ShopperPaymentDetailsResponse response = await omniKassa.RetrieveShopperPaymentDetails(shopperRef);
+                webShopModel.CardOnFileResponses = response.CardOnFileList;
+            }
+            catch (RabobankSdkException ex)
+            {
+                webShopModel.Error = ex.Message;
+            }
+
+            PopulateViewData(webShopModel);
+            return View("Index", webShopModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteShopperPaymentDetail()
+        {
+            InitWebshopModel();
+            try
+            {
+                string id = ""; // TODO: Implement a id here
+                string shopperRef = SHOPPER_REFERENCE;
+                await omniKassa.DeleteShopperPaymentDetail(id, shopperRef);
+                // TODO: Remove the deleted card on file here
+            }
+            catch (RabobankSdkException ex) 
+            {
+                webShopModel.Error = ex.Message;
+            }
+            return View("Index", webShopModel);
         }
     }
 }

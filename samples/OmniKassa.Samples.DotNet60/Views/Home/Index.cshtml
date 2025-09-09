@@ -129,3 +129,24 @@
     <input type="submit" value="Initiate refund" id="initiate_refund_request">
 </form>
 <br />
+
+<table>
+    <colgroup width="100" />
+    <tr>
+        <td><b>Id</b></td>
+    </tr>
+    @if (Model != null)
+    {
+        foreach (var cardOnFile in Model.GetCardsOnFile())
+        {
+            <tr>
+                <td>@cardOnFile.Id</td>
+            </tr>
+        }
+    }
+</table>
+
+<form method="post" action="/Home/RetrieveShopperPaymentDetails" name="shopper_payment_details">
+    <input type="submit" value="Retrieve cards on file" id="retrieve_shopper_payment_details">    
+</form>
+<br />

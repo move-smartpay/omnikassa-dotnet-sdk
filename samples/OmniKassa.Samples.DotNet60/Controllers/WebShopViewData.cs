@@ -4,6 +4,7 @@ using OmniKassa.Model.Enums;
 using OmniKassa.Model.Order;
 using OmniKassa.Model.Response;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace example_dotnet60.Controllers
 {
@@ -75,6 +76,23 @@ namespace example_dotnet60.Controllers
                 {
                     Value = item.Id,
                     Text = item.Name
+                });
+            }
+            return items;
+        }
+
+        public static List<SelectListItem> GetCardOnFileItems(WebShopModel model)
+        {
+            var items = new List<SelectListItem>()
+            {
+                new SelectListItem() { Text = "", Value = "" }
+            };
+            foreach (CardOnFile item in model.GetCardsOnFile())
+            {
+                items.Add(new SelectListItem()
+                {
+                    Value = item.Id,
+                    Text = item.ToString()
                 });
             }
             return items;
