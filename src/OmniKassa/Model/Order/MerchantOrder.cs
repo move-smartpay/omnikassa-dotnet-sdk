@@ -25,12 +25,6 @@ namespace OmniKassa.Model.Order
         public Money Amount { get; private set; }
 
         /// <summary>
-        /// Enable card on file
-        /// </summary>
-        [JsonProperty(PropertyName = "enableCardOnFile")]
-        public bool EnableCardOnFile { get; set; }
-
-        /// <summary>
         /// Desired language for the payment page
         /// </summary>
         [JsonProperty(PropertyName = "language")]
@@ -187,7 +181,6 @@ namespace OmniKassa.Model.Order
         {
             this.MerchantOrderId = builder.MerchantOrderId;
             this.Amount = builder.Amount;
-            this.EnableCardOnFile = builder.EnableCardOnFile;
             this.Language = builder.Language;
             this.Description = builder.Description;
             this.MerchantReturnURL = builder.MerchantReturnURL;
@@ -227,7 +220,6 @@ namespace OmniKassa.Model.Order
             MerchantOrder order = (MerchantOrder)obj;
             return Equals(MerchantOrderId, order.MerchantOrderId) &&
                 Equals(Amount, order.Amount) &&
-                Equals(EnableCardOnFile, order.EnableCardOnFile) &&
                 Equals(Language, order.Language) &&
                 Equals(Description, order.Description) &&
                 Equals(MerchantReturnURL, order.MerchantReturnURL) &&
@@ -270,7 +262,6 @@ namespace OmniKassa.Model.Order
                 hash = (hash * -1521134295) + (PaymentBrand == null ? 0 : PaymentBrand.GetHashCode());
                 hash = (hash * -1521134295) + (paymentBrandMetaData == null ? 0 : paymentBrandMetaData.GetHashCode());
                 hash = (hash * -1521134295) + (ShopperReference == null ? 0 : ShopperReference.GetHashCode());
-                hash = (hash * -1521134295) + EnableCardOnFile.GetHashCode();
                 hash = (hash * -1521134295) + (PaymentBrandForce == null ? 0 : PaymentBrandForce.GetHashCode());
                 hash = GetHashCodePaymentBrandMetaData(hash);
                 hash = (hash * -1521134295) + SkipHppResultPage.GetHashCode();
@@ -304,7 +295,6 @@ namespace OmniKassa.Model.Order
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public String MerchantOrderId { get; private set; }
             public Money Amount { get; private set; }
-            public bool EnableCardOnFile { get; private set; }
             public Language? Language { get; private set; }
             public String Description { get; private set; }
             public String MerchantReturnURL { get; private set; }
@@ -354,18 +344,6 @@ namespace OmniKassa.Model.Order
                 this.Amount = amount;
                 return this;
             }
-            
-            /// <summary>
-            /// Enables card on file for this order.
-            /// </summary>
-            /// <param name="enableCardOnFile">Enable card on file</param>
-            /// <returns>Builder</returns>
-            public Builder WithCardOnFile(bool enableCardOnFile)
-            {
-                this.EnableCardOnFile = enableCardOnFile;
-                return this;
-            }
-            
 
             /// <summary>
             /// - Must not be null

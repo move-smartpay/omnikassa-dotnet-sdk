@@ -102,7 +102,9 @@ namespace example_dotnet60.Models
             PaymentBrandMetaData? paymentBrandMetaData,
             string initiatingParty,
             bool skipHppResultPage,
-            string shopperBankstatementReference
+            string shopperBankstatementReference,
+            bool enableCardOnFile,
+            string shopperReference
         ) {
             var builder = MerchantOrderBuilder
                 .WithAmount(Money.FromDecimal(Currency.EUR, totalPrice))
@@ -116,7 +118,8 @@ namespace example_dotnet60.Models
                 .WithPaymentBrandMetaData(paymentBrandMetaData)
                 .WithInitiatingParty(initiatingParty)
                 .WithSkipHppResultPage(skipHppResultPage)
-                .WithShopperBankstatementReference(shopperBankstatementReference);
+                .WithShopperBankstatementReference(shopperBankstatementReference)
+                .WithShopperReference(shopperReference);
 
             return builder.Build();
         }

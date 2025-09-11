@@ -20,6 +20,8 @@ namespace OmniKassa.Samples.DotNet462.Controllers
         private readonly string BASE_URL;
         private readonly string USER_AGENT;
         private readonly string PARTNER_REFERENCE;
+        private readonly string FAST_CHECKOUT_RETURN_URL;
+        private readonly string SHOPPER_REFERENCE;
 
         private static Endpoint omniKassa;
         private static ApiNotification notification;       
@@ -42,6 +44,18 @@ namespace OmniKassa.Samples.DotNet462.Controllers
             if (!string.IsNullOrEmpty(partnerReference))
             {
                 PARTNER_REFERENCE = partnerReference;
+            }
+
+            var fastCheckoutReturnUrl = appSettings["FastCheckoutReturnUrl"];
+            if (!string.IsNullOrEmpty(fastCheckoutReturnUrl))
+            {
+                FAST_CHECKOUT_RETURN_URL = fastCheckoutReturnUrl;
+            }
+
+            var shopperReference = appSettings["ShopperReference"];
+            if (!string.IsNullOrEmpty(shopperReference))
+            {
+                SHOPPER_REFERENCE = shopperReference;
             }
 
             if (omniKassa == null)

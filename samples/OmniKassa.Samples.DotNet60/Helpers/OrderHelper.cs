@@ -79,6 +79,8 @@ namespace example_dotnet60.Helpers
             string initiatingParty = GetInitiatingParty(collection);
             bool skipHppResultPage = GetSkipHppResultPage(collection);
             string shopperBankstatementReference = GetShopperBankstatementReference(collection);
+            bool enableCardOnFile = GetEnableCardOnFile(collection);
+            string shopperReference = GetShopperReference(collection);
 
             var merchantOrder = model.PrepareMerchantOrder(
                 totalPrice,
@@ -90,7 +92,9 @@ namespace example_dotnet60.Helpers
                 paymentBrandMetaData,
                 initiatingParty,
                 skipHppResultPage,
-                shopperBankstatementReference
+                shopperBankstatementReference,
+                enableCardOnFile,
+                shopperReference
             );
 
             return merchantOrder;
@@ -187,10 +191,10 @@ namespace example_dotnet60.Helpers
                 createdPaymentBrandMetaData = true;
             }
 
-            bool useCardOnFile = GetUseCardOnFile(collection);
-            if (useCardOnFile)
+            bool enableCardOnFile = GetEnableCardOnFile(collection);
+            if (enableCardOnFile)
             {
-                paymentBrandMetaData.UseCardOnFile = true;
+                paymentBrandMetaData.EnableCardOnFile = true;
                 createdPaymentBrandMetaData = true;
             }
 
@@ -202,9 +206,9 @@ namespace example_dotnet60.Helpers
             return collection.Get("initiatingParty");
         }
 
-        private static bool GetUseCardOnFile(NameValueCollection collection)
+        private static bool GetEnableCardOnFile(NameValueCollection collection)
         {
-            return collection.Get("useCardOnFile") == "on";
+            return collection.Get("enableCardOnFile") == "on";
         }
 
         private static bool GetSkipHppResultPage(NameValueCollection collection)
@@ -215,6 +219,11 @@ namespace example_dotnet60.Helpers
         private static string GetShopperBankstatementReference(NameValueCollection collection)
         {
             return collection.Get("shopperBankstatementReference");
+        }
+
+        public static string GetShopperReference(NameValueCollection collection)
+        {
+            return collection.Get("shopperReference");
         }
 
         public static T GetEnum<T>(String value)

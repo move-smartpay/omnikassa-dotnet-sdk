@@ -40,6 +40,11 @@
         /// </summary>
         public string FastCheckoutReturnUrl { get; }
 
+        /// <summary>
+        /// A pre-configured shopper referencem useful for local testing
+        /// </summary>
+        public string ShopperReference { get; }
+
         public ConfigurationParameters(
             string refreshToken,
             string signingKey,
@@ -64,7 +69,8 @@
             string baseUrl,
             string userAgent,
             string partnerReference,
-            string fastCheckoutReturnUrl
+            string fastCheckoutReturnUrl,
+            string shopperReference
         ) {
             RefreshToken = refreshToken;
             SigningKey = signingKey;
@@ -73,6 +79,7 @@
             UserAgent = userAgent;
             PartnerReference = partnerReference;
             FastCheckoutReturnUrl = fastCheckoutReturnUrl;
+            ShopperReference = shopperReference;
         }
     }
 }
