@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using OmniKassa.Model.Enums;
+using System;
+using System.Linq;
 
 namespace OmniKassa.Model.Order
 {
@@ -36,6 +38,16 @@ namespace OmniKassa.Model.Order
         /// </summary>
         public FastCheckout()
         {
+        }
+
+        /// <summary>
+        /// Returns whether a RequiredCheckoutFields value is present.
+        /// </summary>
+        /// <param name="requiredCheckoutFields"></param>
+        /// <returns></returns>
+        public Boolean HasRequiredCheckoutFields(RequiredCheckoutFields requiredCheckoutFields)
+        {
+            return RequiredCheckoutFields.Contains<RequiredCheckoutFields>(requiredCheckoutFields);
         }
         
         /// <summary>

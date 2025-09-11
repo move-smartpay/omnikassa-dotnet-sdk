@@ -35,13 +35,36 @@
         /// </summary>
         public string PartnerReference { get; }
 
+        /// <summary>
+        /// Can be filled with a fast checkout return URL
+        /// </summary>
+        public string FastCheckoutReturnUrl { get; }
+
+        public ConfigurationParameters(
+            string refreshToken,
+            string signingKey,
+            string callbackUrl,
+            string baseUrl,
+            string userAgent,
+            string partnerReference
+        )
+        {
+            RefreshToken = refreshToken;
+            SigningKey = signingKey;
+            CallbackUrl = callbackUrl;
+            BaseUrl = baseUrl;
+            UserAgent = userAgent;
+            PartnerReference = partnerReference;
+        }
+
         public ConfigurationParameters(
             string refreshToken, 
             string signingKey,
             string callbackUrl, 
             string baseUrl,
             string userAgent,
-            string partnerReference
+            string partnerReference,
+            string fastCheckoutReturnUrl
         ) {
             RefreshToken = refreshToken;
             SigningKey = signingKey;
@@ -49,6 +72,7 @@
             BaseUrl = baseUrl;
             UserAgent = userAgent;
             PartnerReference = partnerReference;
+            FastCheckoutReturnUrl = fastCheckoutReturnUrl;
         }
     }
 }

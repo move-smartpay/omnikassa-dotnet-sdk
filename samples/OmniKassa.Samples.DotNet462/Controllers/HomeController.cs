@@ -52,14 +52,12 @@ namespace OmniKassa.Samples.DotNet462.Controllers
 
         private void InitializeOmniKassaEndpoint()
         {
-            if (String.IsNullOrEmpty(BASE_URL))
-            {
-                omniKassa = Endpoint.Create(Environment.SANDBOX, SIGNING_KEY, TOKEN, USER_AGENT, PARTNER_REFERENCE);
-            }
-            else
-            {
-                omniKassa = Endpoint.Create(BASE_URL, SIGNING_KEY, TOKEN, USER_AGENT, PARTNER_REFERENCE);
-            }
+            // The base URL can be one of the following:
+            // "https://betalen.rabobank.nl/omnikassa-api/";
+            // "https://api.pay.rabobank.nl/omnikassa-api/";
+            // "https://betalen.rabobank.nl/omnikassa-api-sandbox/";
+            // "https://api.pay-acpt.rabobank.nl/omnikassa-api/";
+            omniKassa = Endpoint.Create(BASE_URL, SIGNING_KEY, TOKEN, USER_AGENT, PARTNER_REFERENCE);
         }
 
         [HttpGet]

@@ -2,7 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h3>OmniKassa 2.0 Payment SDK Example (MVC @ViewData["Version"] @ViewData["Runtime"])</h3>
+<h3>OmniKassa 2.0 Payment SDK Example (MVC @ViewBag.Runtime @ViewBag.RuntimeVersion)</h3>
+<a href="/">Reset</a><br />
 <br />
 @if (Model != null)
 {
@@ -28,7 +29,11 @@
 @{Html.RenderPartial("OrderItems");}
 @{Html.RenderPartial("OrderDetails");}
 
+<form method="get" action="/Home/InitiateRefund" name="initiate_refund">
+    <input type="submit" value="Initiate refund" id="initiate_refund_request">
+</form>
 <br />
+
 <table>
     <colgroup width="00" />
     <colgroup width="80" />
@@ -125,15 +130,14 @@
 </form>
 <br />
 
-<form method="get" action="/Home/InitiateRefund" name="initiate_refund">
-    <input type="submit" value="Initiate refund" id="initiate_refund_request">
-</form>
-<br />
-
 <table>
+    <colgroup width="200" />
+    <colgroup width="200" />
     <colgroup width="100" />
     <tr>
         <td><b>Id</b></td>
+        <td><b>Brand</b></td>
+        <td><b>Card No.</b></td>
     </tr>
     @if (Model != null)
     {
@@ -141,6 +145,8 @@
         {
             <tr>
                 <td>@cardOnFile.Id</td>
+                <td>@cardOnFile.Brand</td>
+                <td>@cardOnFile.Last4Digits</td>
             </tr>
         }
     }

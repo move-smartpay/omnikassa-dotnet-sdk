@@ -123,6 +123,22 @@ namespace OmniKassa.Model.Order
         }
 
         /// <summary>
+        /// Extra information about the payment brand. Prefer using the Builder methods.
+        /// For fast checkout, use <see cref="Builder.WithPaymentBrandFastCheckout(FastCheckout)"/>.
+        /// </summary>
+        public PaymentBrandMetaData PaymentBrandMetaDataObject 
+        {
+            get
+            {
+                return paymentBrandMetaData;
+            }
+            private set
+            {
+                paymentBrandMetaData = value;
+            }
+        }
+
+        /// <summary>
         /// Skip result page
         /// </summary>
         [JsonProperty(PropertyName = "skipHppResultPage")]
@@ -160,7 +176,7 @@ namespace OmniKassa.Model.Order
         /// </summary>
         public MerchantOrder()
         {
-            
+
         }
 
         /// <summary>
@@ -489,7 +505,7 @@ namespace OmniKassa.Model.Order
             /// Can be used for creating a fast checkout order.
             /// </summary>
             /// <param name="fastCheckout"></param>
-            /// <returns></returns>
+            /// <returns>Builder</returns>
             public Builder WithPaymentBrandFastCheckout(FastCheckout fastCheckout)
             {
                 if (PaymentBrandMetaData == null)
@@ -498,6 +514,17 @@ namespace OmniKassa.Model.Order
                 }
                 PaymentBrandMetaData.FastCheckout = fastCheckout;
                 
+                return this;
+            }
+
+            /// <summary>
+            /// Can be used to create a payment brand meta data object directly.
+            /// </summary>
+            /// <param name="paymentBrandMetaData"></param>
+            /// <returns>Builder</returns>
+            public Builder WithPaymentBrandMetaData(PaymentBrandMetaData paymentBrandMetaData)
+            {
+                PaymentBrandMetaData = paymentBrandMetaData;
                 return this;
             }
 
