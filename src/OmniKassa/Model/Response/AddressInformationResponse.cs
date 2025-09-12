@@ -15,6 +15,11 @@ namespace OmniKassa.Model.Response
         public string FirstName { get; set; }
 
         /// <summary>
+        /// The middle name of the shopper.
+        /// </summary>
+        public string MiddleName { get; set; }
+        
+        /// <summary>
         /// The last name of the shopper
         /// </summary>
         [JsonProperty(PropertyName = "lastName")]

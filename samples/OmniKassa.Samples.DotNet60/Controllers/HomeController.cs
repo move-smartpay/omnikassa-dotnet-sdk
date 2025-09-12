@@ -28,6 +28,8 @@ namespace example_dotnet60.Controllers
         private readonly string BASE_URL;
         private readonly string USER_AGENT;
         private readonly string PARTNER_REFERENCE;
+        private readonly string FAST_CHECKOUT_RETURN_URL;
+        private readonly string SHOPPER_REFERENCE;
 
         private static string SESSION_WEBSHOP_MODEL = "WEBSHOP_MODEL";
 
@@ -58,6 +60,18 @@ namespace example_dotnet60.Controllers
                 PARTNER_REFERENCE = partnerReference;
             }
 
+            var fastCheckoutReturnUrl = configurationParameters.FastCheckoutReturnUrl;
+            if (!string.IsNullOrEmpty(fastCheckoutReturnUrl))
+            {
+                FAST_CHECKOUT_RETURN_URL = fastCheckoutReturnUrl;
+            }
+
+            var shopperReference = configurationParameters.ShopperReference;
+            if (!string.IsNullOrEmpty(shopperReference))
+            {
+                SHOPPER_REFERENCE = shopperReference;
+            }
+
             if (omniKassa == null)
             {
                 InitializeOmniKassaEndpoint();
@@ -66,14 +80,12 @@ namespace example_dotnet60.Controllers
 
         private void InitializeOmniKassaEndpoint()
         {
-            if (String.IsNullOrEmpty(BASE_URL))
-            {
-                omniKassa = Endpoint.Create(OmniKassa.Environment.SANDBOX, SIGNING_KEY, TOKEN, USER_AGENT, PARTNER_REFERENCE);
-            }
-            else
-            {
-                omniKassa = Endpoint.Create(BASE_URL, SIGNING_KEY, TOKEN, USER_AGENT, PARTNER_REFERENCE);
-            }
+            // The base URL can be one of the following:
+            // "https://betalen.rabobank.nl/omnikassa-api/";
+            // "https://api.pay.rabobank.nl/omnikassa-api/";
+            // "https://betalen.rabobank.nl/omnikassa-api-sandbox/";
+            // "https://api.pay-acpt.rabobank.nl/omnikassa-api/";
+            omniKassa = Endpoint.Create(BASE_URL, SIGNING_KEY, TOKEN, USER_AGENT, PARTNER_REFERENCE);
         }
 
         [HttpGet]
@@ -91,8 +103,8 @@ namespace example_dotnet60.Controllers
             var mvcName = typeof(Controller).Assembly.GetName();
             var isMono = Type.GetType("Mono.Runtime") != null;
 
-            ViewData["Version"] = mvcName.Version.Major + "." + mvcName.Version.Minor;
-            ViewData["Runtime"] = isMono ? "Mono" : ".NET";
+            ViewBag.RuntimeVersion = mvcName.Version.Major + "." + mvcName.Version.Minor;
+            ViewBag.Runtime = isMono ? "Mono" : ".NET";
         }
 
         private void InitWebshopModel()
@@ -138,6 +150,11 @@ namespace example_dotnet60.Controllers
             ViewBag.ShippingAddressCountryItems = WebShopViewData.GetShippingAddressCountryItems(model.Order);
             ViewBag.BillingDetails = model.Order.BillingDetails;
             ViewBag.BillingAddressCountryItems = WebShopViewData.GetBillingAddressCountryItems(model.Order);
+            ViewBag.EnableCardOnFile = model.Order.PaymentBrandMetaDataObject?.EnableCardOnFile ?? false;
+            ViewBag.ShopperReference = model.Order.ShopperReference;
+            ViewBag.RequiredCheckoutFieldsCustomerInformation = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.CUSTOMER_INFORMATION) ?? false;
+            ViewBag.RequiredCheckoutFieldsBillingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.BILLING_ADDRESS) ?? false;
+            ViewBag.RequiredCheckoutFieldsShippingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.SHIPPING_ADDRESS) ?? false;
         }
 
         [HttpPost]
@@ -368,6 +385,10 @@ namespace example_dotnet60.Controllers
                 .WithCountryCode(CountryCode.NL)
                 .Build();
 
+            PaymentBrandMetaData paymentBrandMetaData = new PaymentBrandMetaData.Builder()
+                .WithEnableCardOnFile(true)
+                .Build();
+
             MerchantOrder.Builder order = new MerchantOrder.Builder()
                 .WithMerchantOrderId(Convert.ToString(orderId))
                 .WithDescription("An example description")
@@ -376,7 +397,8 @@ namespace example_dotnet60.Controllers
                 .WithBillingDetail(billingDetails)
                 .WithLanguage(Language.NL)
                 .WithMerchantReturnURL(RETURN_URL)
-                .WithInitiatingParty("LIGHTSPEED");
+                .WithInitiatingParty("LIGHTSPEED")
+                .WithShopperReference(SHOPPER_REFERENCE);
 
             return order;
         }
@@ -387,7 +409,8 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
             try
             {
-                webShopModel.PaymentBrandsResponse = await omniKassa.RetrievePaymentBrands();
+                var paymentBrands = await omniKassa.RetrievePaymentBrands();
+                webShopModel.PaymentBrandsResponse = paymentBrands;
             }
             catch (RabobankSdkException ex)
             {
@@ -404,7 +427,8 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
             try
             {
-                webShopModel.IdealIssuersResponse = await omniKassa.RetrieveIdealIssuers();
+                var idealIssuers = await omniKassa.RetrieveIdealIssuers();
+                webShopModel.IdealIssuersResponse = idealIssuers;
             }
             catch (RabobankSdkException ex)
             {
@@ -435,6 +459,59 @@ namespace example_dotnet60.Controllers
                 collection.Add(key, value);
             }
             return collection;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RetrieveShopperPaymentDetails()
+        {
+            InitWebshopModel();
+            try
+            {
+                NameValueCollection collection = GetCollection(Request.Form);
+                string shopperReference = collection.Get("shopperReference");
+                ShopperPaymentDetailsResponse response = await omniKassa.RetrieveShopperPaymentDetails(shopperReference);
+                webShopModel.CardsOnFile = response.CardOnFileList;
+            }
+            catch (RabobankSdkException ex)
+            {
+                webShopModel.Error = ex.Message;
+            }
+
+            PopulateViewData(webShopModel);
+            return View("Index", webShopModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteShopperPaymentDetail()
+        {
+            InitWebshopModel();
+            try
+            {
+                NameValueCollection collection = GetCollection(Request.Form);
+                string shopperReference = collection.Get("shopperReference");
+                string id = collection.Get("id");
+                await omniKassa.DeleteShopperPaymentDetail(id, shopperReference);
+            }
+            catch (RabobankSdkException ex) 
+            {
+                webShopModel.Error = ex.Message;
+            }
+
+            InitWebshopModel();
+            try
+            {
+                NameValueCollection collection = GetCollection(Request.Form);
+                string shopperReference = collection.Get("shopperReference");
+                ShopperPaymentDetailsResponse response = await omniKassa.RetrieveShopperPaymentDetails(shopperReference);
+                webShopModel.CardsOnFile = response.CardOnFileList;
+            }
+            catch (RabobankSdkException ex)
+            {
+                webShopModel.Error = ex.Message;
+            }
+
+            PopulateViewData(webShopModel);
+            return View("Index", webShopModel);
         }
     }
 }

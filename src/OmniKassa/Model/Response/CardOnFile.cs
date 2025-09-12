@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using System;
+using OmniKassa.Model.Enums;
 
 namespace OmniKassa.Model.Response
 {
@@ -42,6 +42,7 @@ namespace OmniKassa.Model.Response
         /// The status of the token
         /// </summary>
         [JsonProperty("status")]
-        public string Status { get; set; }
+        [JsonConverter(typeof(EnumJsonConverter<CardStatus>))]
+        public CardStatus? Status { get; set; }
     }
 }

@@ -25,12 +25,6 @@ namespace OmniKassa.Model.Order
         public Money Amount { get; private set; }
 
         /// <summary>
-        /// Enable card on file
-        /// </summary>
-        [JsonProperty(PropertyName = "enableCardOnFile")]
-        public bool EnableCardOnFile { get; set; }
-
-        /// <summary>
         /// Desired language for the payment page
         /// </summary>
         [JsonProperty(PropertyName = "language")]
@@ -98,10 +92,10 @@ namespace OmniKassa.Model.Order
         /// Only used for the iDeal issuerId. This dictionary is for backwards compatibility.
         /// For fast checkout, use <see cref="Builder.WithPaymentBrandFastCheckout(FastCheckout)"/>.
         /// </summary>
-        public IReadOnlyDictionary<string, string> PaymentBrandMetaData {
+        public IReadOnlyDictionary<string, Object> PaymentBrandMetaData {
             get
             {
-                var metaData = new Dictionary<string, string>();
+                var metaData = new Dictionary<string, Object>();
 
                 if (String.IsNullOrEmpty(paymentBrandMetaData?.IssuerId) == false)
                 {
@@ -116,9 +110,25 @@ namespace OmniKassa.Model.Order
                 {
                     if (keyValue.Key.ToLower() == "issuerid")
                     {
-                        paymentBrandMetaData.IssuerId = keyValue.Value;
+                        paymentBrandMetaData.IssuerId = keyValue.Value.ToString();
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Extra information about the payment brand. Prefer using the Builder methods.
+        /// For fast checkout, use <see cref="Builder.WithPaymentBrandFastCheckout(FastCheckout)"/>.
+        /// </summary>
+        public PaymentBrandMetaData PaymentBrandMetaDataObject 
+        {
+            get
+            {
+                return paymentBrandMetaData;
+            }
+            private set
+            {
+                paymentBrandMetaData = value;
             }
         }
 
@@ -160,7 +170,7 @@ namespace OmniKassa.Model.Order
         /// </summary>
         public MerchantOrder()
         {
-            
+
         }
 
         /// <summary>
@@ -171,7 +181,6 @@ namespace OmniKassa.Model.Order
         {
             this.MerchantOrderId = builder.MerchantOrderId;
             this.Amount = builder.Amount;
-            this.EnableCardOnFile = builder.EnableCardOnFile;
             this.Language = builder.Language;
             this.Description = builder.Description;
             this.MerchantReturnURL = builder.MerchantReturnURL;
@@ -211,7 +220,6 @@ namespace OmniKassa.Model.Order
             MerchantOrder order = (MerchantOrder)obj;
             return Equals(MerchantOrderId, order.MerchantOrderId) &&
                 Equals(Amount, order.Amount) &&
-                Equals(EnableCardOnFile, order.EnableCardOnFile) &&
                 Equals(Language, order.Language) &&
                 Equals(Description, order.Description) &&
                 Equals(MerchantReturnURL, order.MerchantReturnURL) &&
@@ -254,7 +262,6 @@ namespace OmniKassa.Model.Order
                 hash = (hash * -1521134295) + (PaymentBrand == null ? 0 : PaymentBrand.GetHashCode());
                 hash = (hash * -1521134295) + (paymentBrandMetaData == null ? 0 : paymentBrandMetaData.GetHashCode());
                 hash = (hash * -1521134295) + (ShopperReference == null ? 0 : ShopperReference.GetHashCode());
-                hash = (hash * -1521134295) + EnableCardOnFile.GetHashCode();
                 hash = (hash * -1521134295) + (PaymentBrandForce == null ? 0 : PaymentBrandForce.GetHashCode());
                 hash = GetHashCodePaymentBrandMetaData(hash);
                 hash = (hash * -1521134295) + SkipHppResultPage.GetHashCode();
@@ -271,7 +278,7 @@ namespace OmniKassa.Model.Order
             if (PaymentBrandMetaData != null)
             {
                 var orderedMetaData = PaymentBrandMetaData.OrderBy(kvp => kvp.Key, StringComparer.Ordinal);
-                foreach (KeyValuePair<string, string> result in orderedMetaData)
+                foreach (KeyValuePair<string, Object> result in orderedMetaData)
                 {
                     hash = (hash * -1521134295) + result.Key.GetHashCode();
                     hash = (hash * -1521134295) + result.Value.GetHashCode();
@@ -288,7 +295,6 @@ namespace OmniKassa.Model.Order
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public String MerchantOrderId { get; private set; }
             public Money Amount { get; private set; }
-            public bool EnableCardOnFile { get; private set; }
             public Language? Language { get; private set; }
             public String Description { get; private set; }
             public String MerchantReturnURL { get; private set; }
@@ -338,18 +344,6 @@ namespace OmniKassa.Model.Order
                 this.Amount = amount;
                 return this;
             }
-            
-            /// <summary>
-            /// Enables card on file for this order.
-            /// </summary>
-            /// <param name="enableCardOnFile">Enable card on file</param>
-            /// <returns>Builder</returns>
-            public Builder WithCardOnFile(bool enableCardOnFile)
-            {
-                this.EnableCardOnFile = enableCardOnFile;
-                return this;
-            }
-            
 
             /// <summary>
             /// - Must not be null
@@ -466,7 +460,7 @@ namespace OmniKassa.Model.Order
             /// </summary>
             /// <param name="paymentBrandMetaData">Optional</param>
             /// <returns>Builder</returns>
-            public Builder WithPaymentBrandMetaData(Dictionary<string, string> paymentBrandMetaData)
+            public Builder WithPaymentBrandMetaData(IReadOnlyDictionary<string, Object> paymentBrandMetaData)
             {
                 if (paymentBrandMetaData == null)
                 {
@@ -479,12 +473,17 @@ namespace OmniKassa.Model.Order
                     {
                         PaymentBrandMetaData = new PaymentBrandMetaData();
                     }
-                    PaymentBrandMetaData.IssuerId = value;
+                    PaymentBrandMetaData.IssuerId = value.ToString();
                 }
 
                 return this;
             }
 
+            /// <summary>
+            /// Can be used for creating a fast checkout order.
+            /// </summary>
+            /// <param name="fastCheckout"></param>
+            /// <returns>Builder</returns>
             public Builder WithPaymentBrandFastCheckout(FastCheckout fastCheckout)
             {
                 if (PaymentBrandMetaData == null)
@@ -493,6 +492,17 @@ namespace OmniKassa.Model.Order
                 }
                 PaymentBrandMetaData.FastCheckout = fastCheckout;
                 
+                return this;
+            }
+
+            /// <summary>
+            /// Can be used to create a payment brand meta data object directly.
+            /// </summary>
+            /// <param name="paymentBrandMetaData"></param>
+            /// <returns>Builder</returns>
+            public Builder WithPaymentBrandMetaData(PaymentBrandMetaData paymentBrandMetaData)
+            {
+                PaymentBrandMetaData = paymentBrandMetaData;
                 return this;
             }
 
@@ -542,7 +552,8 @@ namespace OmniKassa.Model.Order
                 return this;
 						}
 
-            /// - Order shipping cost amount in cents. Only used for display purposes. Does not influence order total.
+            /// <summary>
+            /// Order shipping cost amount in cents. Only used for display purposes. Does not influence order total.
             /// </summary>
             /// <param name="shippingCost">Shipping cost amount</param>
             /// <returns>Builder</returns>

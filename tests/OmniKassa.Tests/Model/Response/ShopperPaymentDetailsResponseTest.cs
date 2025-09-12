@@ -3,6 +3,7 @@ using OmniKassa.Model.Response;
 using OmniKassa.Tests;
 using System;
 using System.Collections.Generic;
+using OmniKassa.Model.Enums;
 using Xunit;
 
 namespace OmniKassa.Tests.Model.Response
@@ -85,7 +86,7 @@ namespace OmniKassa.Tests.Model.Response
                         Brand = "MASTERCARD",
                         CardExpiry = "2029-12",
                         TokenExpiry = "2027-01",
-                        Status = "ACTIVE"
+                        Status = CardStatus.ACTIVE
                     },
                     new CardOnFile
                     {
@@ -94,7 +95,7 @@ namespace OmniKassa.Tests.Model.Response
                         Brand = "VISA",
                         CardExpiry = "2028-06",
                         TokenExpiry = "2026-06",
-                        Status = "ACTIVE"
+                        Status = CardStatus.ACTIVE
                     },
                     new CardOnFile
                     {
@@ -103,7 +104,7 @@ namespace OmniKassa.Tests.Model.Response
                         Brand = "MAESTRO",
                         CardExpiry = "2030-03",
                         TokenExpiry = "2028-03",
-                        Status = "INACTIVE"
+                        Status = CardStatus.INACTIVE
                     }
                 }
             };

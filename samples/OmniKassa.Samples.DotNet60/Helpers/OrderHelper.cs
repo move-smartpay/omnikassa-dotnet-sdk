@@ -75,12 +75,14 @@ namespace example_dotnet60.Helpers
             CustomerInformation customerInformation = CreateCustomerInformation(collection);
             PaymentBrand? paymentBrand = CreatePaymentBrand(collection);
             PaymentBrandForce? paymentBrandForce = CreatePaymentBrandForce(collection);
-            Dictionary<string, string> paymentBrandMetaData = CreatePaymentBrandMetaData(collection);
+            PaymentBrandMetaData? paymentBrandMetaData = CreatePaymentBrandMetaData(collection);
             string initiatingParty = GetInitiatingParty(collection);
             bool skipHppResultPage = GetSkipHppResultPage(collection);
             string shopperBankstatementReference = GetShopperBankstatementReference(collection);
+            bool enableCardOnFile = GetEnableCardOnFile(collection);
+            string shopperReference = GetShopperReference(collection);
 
-            return model.PrepareMerchantOrder(
+            var merchantOrder = model.PrepareMerchantOrder(
                 totalPrice,
                 customerInformation,
                 shippingDetails,
@@ -90,8 +92,12 @@ namespace example_dotnet60.Helpers
                 paymentBrandMetaData,
                 initiatingParty,
                 skipHppResultPage,
-                shopperBankstatementReference
+                shopperBankstatementReference,
+                enableCardOnFile,
+                shopperReference
             );
+
+            return merchantOrder;
         }
 
         private static CustomerInformation CreateCustomerInformation(NameValueCollection collection)
@@ -150,19 +156,59 @@ namespace example_dotnet60.Helpers
             return GetEnum<PaymentBrandForce>(paymentBrandForce);
         }
 
-        private static Dictionary<string, string> CreatePaymentBrandMetaData(NameValueCollection collection)
+        private static PaymentBrandMetaData? CreatePaymentBrandMetaData(NameValueCollection collection)
         {
+            var createdPaymentBrandMetaData = false;
+            var paymentBrandMetaData = new PaymentBrandMetaData();
+           
             String idealIssuer = collection.Get("idealIssuer");
-            if (String.IsNullOrEmpty(idealIssuer))
-                return null;
-            return new Dictionary<string, string>() {
-                { ISSUER_ID, idealIssuer }
-            };
+            if (!String.IsNullOrEmpty(idealIssuer))
+            {
+                paymentBrandMetaData.IssuerId = idealIssuer;
+                createdPaymentBrandMetaData = true;
+            }
+
+            bool requiredCheckoutFieldsCustomerInformation = collection.Get("requiredCheckoutFieldsCustomerInformation") == "on";
+            bool requiredCheckoutFieldsBillingAddress = collection.Get("requiredCheckoutFieldsBillingAddress") == "on";
+            bool requiredCheckoutFieldsShippingAddress = collection.Get("requiredCheckoutFieldsShippingAddress") == "on";
+            if (requiredCheckoutFieldsCustomerInformation || requiredCheckoutFieldsBillingAddress || requiredCheckoutFieldsShippingAddress)
+            {
+                var requiredCheckoutFields = new List<RequiredCheckoutFields>();
+                if (requiredCheckoutFieldsCustomerInformation)
+                {
+                    requiredCheckoutFields.Add(RequiredCheckoutFields.CUSTOMER_INFORMATION);
+                }
+                if (requiredCheckoutFieldsBillingAddress)
+                {
+                    requiredCheckoutFields.Add(RequiredCheckoutFields.BILLING_ADDRESS);
+                }
+                if (requiredCheckoutFieldsShippingAddress)
+                {
+                    requiredCheckoutFields.Add(RequiredCheckoutFields.SHIPPING_ADDRESS);
+                }
+                var fastCheckout = new FastCheckout(requiredCheckoutFields.AsReadOnly());
+                paymentBrandMetaData.FastCheckout = fastCheckout;
+                createdPaymentBrandMetaData = true;
+            }
+
+            bool enableCardOnFile = GetEnableCardOnFile(collection);
+            if (enableCardOnFile)
+            {
+                paymentBrandMetaData.EnableCardOnFile = true;
+                createdPaymentBrandMetaData = true;
+            }
+
+            return createdPaymentBrandMetaData ? paymentBrandMetaData : null;
         }
 
         private static string GetInitiatingParty(NameValueCollection collection)
         {
             return collection.Get("initiatingParty");
+        }
+
+        private static bool GetEnableCardOnFile(NameValueCollection collection)
+        {
+            return collection.Get("enableCardOnFile") == "on";
         }
 
         private static bool GetSkipHppResultPage(NameValueCollection collection)
@@ -173,6 +219,11 @@ namespace example_dotnet60.Helpers
         private static string GetShopperBankstatementReference(NameValueCollection collection)
         {
             return collection.Get("shopperBankstatementReference");
+        }
+
+        public static string GetShopperReference(NameValueCollection collection)
+        {
+            return collection.Get("shopperReference");
         }
 
         public static T GetEnum<T>(String value)

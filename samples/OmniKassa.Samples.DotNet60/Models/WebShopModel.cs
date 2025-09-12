@@ -27,6 +27,8 @@ namespace example_dotnet60.Models
         public RefundDetailsResponse RefundDetailsResponse { get; set; }
         public TransactionRefundableDetailsResponse TransactionRefundableDetailsResponse { get; set; }
 
+        public List<CardOnFile> CardsOnFile { get; set; } = new List<CardOnFile>();
+
         public string Error { get; set; }
 
         public WebShopModel()
@@ -60,7 +62,7 @@ namespace example_dotnet60.Models
                     .WithCustomerInformation(Order.CustomerInformation)
                     .WithPaymentBrand(Order.PaymentBrand)
                     .WithPaymentBrandForce(Order.PaymentBrandForce)
-                    .WithPaymentBrandMetaData(new Dictionary<string, string>(Order.PaymentBrandMetaData))
+                    .WithPaymentBrandMetaData(Order.PaymentBrandMetaDataObject)
                     .WithInitiatingParty(Order.InitiatingParty)
                     .WithSkipHppResultPage(Order.SkipHppResultPage)
                     .WithShopperBankstatementReference(Order.ShopperBankstatementReference)
@@ -90,18 +92,21 @@ namespace example_dotnet60.Models
             return Order;
         }
 
-        public MerchantOrder PrepareMerchantOrder(Decimal totalPrice,
-                                                  CustomerInformation customerInformation,
-                                                  Address shippingDetails,
-                                                  Address billingDetails,
-                                                  PaymentBrand? paymentBrand,
-                                                  PaymentBrandForce? paymentBrandForce,
-                                                  Dictionary<string, string> paymentBrandMetaData,
-                                                  string initiatingParty,
-                                                  bool skipHppResultPage,
-                                                  string shopperBankstatementReference)
-        {
-            MerchantOrderBuilder
+        public MerchantOrder PrepareMerchantOrder(
+            Decimal totalPrice,
+            CustomerInformation customerInformation,
+            Address shippingDetails,
+            Address billingDetails,
+            PaymentBrand? paymentBrand,
+            PaymentBrandForce? paymentBrandForce,
+            PaymentBrandMetaData? paymentBrandMetaData,
+            string initiatingParty,
+            bool skipHppResultPage,
+            string shopperBankstatementReference,
+            bool enableCardOnFile,
+            string shopperReference
+        ) {
+            var builder = MerchantOrderBuilder
                 .WithAmount(Money.FromDecimal(Currency.EUR, totalPrice))
                 .WithLanguage(Language.NL)
                 .WithDescription("An example description")
@@ -114,9 +119,9 @@ namespace example_dotnet60.Models
                 .WithInitiatingParty(initiatingParty)
                 .WithSkipHppResultPage(skipHppResultPage)
                 .WithShopperBankstatementReference(shopperBankstatementReference)
-                .Build();
+                .WithShopperReference(shopperReference);
 
-            return MerchantOrderBuilder.Build();
+            return builder.Build();
         }
 
         public Decimal GetTotalPrice()
@@ -147,6 +152,15 @@ namespace example_dotnet60.Models
                 return IdealIssuersResponse.IdealIssuers;
             }
             return new List<IdealIssuer>();
+        }
+
+        public List<CardOnFile> GetCardsOnFile()
+        {
+            if (CardsOnFile != null)
+            {
+                return CardsOnFile;
+            }
+            return new List<CardOnFile>();
         }
     }
 }

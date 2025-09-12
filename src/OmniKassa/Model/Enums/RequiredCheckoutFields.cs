@@ -7,8 +7,8 @@ namespace OmniKassa.Model.Enums
     /// <summary>
     /// Enumeration of required checkout fields for fast checkout flow
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]  
-    public enum RequiredCheckoutField
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum RequiredCheckoutFields
     {
         /// <summary>
         /// Customer information field

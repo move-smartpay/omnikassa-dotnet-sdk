@@ -4,7 +4,6 @@
     "currency": "EUR",
     "amount": "495"
   },
-  "enableCardOnFile": false,
   "language": "NL",
   "description": "An example description",
   "merchantReturnURL": "http://localhost/",

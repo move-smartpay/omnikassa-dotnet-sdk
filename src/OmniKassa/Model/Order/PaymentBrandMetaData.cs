@@ -30,6 +30,12 @@ namespace OmniKassa.Model.Order
         public FastCheckout FastCheckout { get; set; }
 
         /// <summary>
+        /// Whether a card on file should be used.
+        /// </summary>
+        [JsonProperty(PropertyName = "enableCardOnFile", NullValueHandling = NullValueHandling.Ignore)]
+        public Boolean? EnableCardOnFile;
+
+        /// <summary>
         /// Initializes an empty PaymentBrandMetaData
         /// </summary>
         public PaymentBrandMetaData()
@@ -44,6 +50,7 @@ namespace OmniKassa.Model.Order
         {
             IssuerId = builder.IssuerId;
             FastCheckout = builder.FastCheckout;
+            EnableCardOnFile = builder.EnableCardOnFile;
         }
 
         /// <summary>
@@ -68,12 +75,13 @@ namespace OmniKassa.Model.Order
             var other = (PaymentBrandMetaData)obj;
 
             return Equals(IssuerId, other.IssuerId) &&
-                   EqualsPaymentBrandMetaData(FastCheckout?.RequiredCheckoutFields, other.FastCheckout?.RequiredCheckoutFields);
+                   EqualsPaymentBrandMetaData(FastCheckout?.RequiredCheckoutFields, other.FastCheckout?.RequiredCheckoutFields) &&
+                   Equals(EnableCardOnFile, other.EnableCardOnFile);
         }
         
         private bool EqualsPaymentBrandMetaData(
-            IReadOnlyList<RequiredCheckoutField> one,
-            IReadOnlyList<RequiredCheckoutField> two)
+            IReadOnlyList<RequiredCheckoutFields> one,
+            IReadOnlyList<RequiredCheckoutFields> two)
         {
             // Handle empty dictionaries as null
             var tmpOne = one != null && one.Count > 0 ? one : null;
@@ -109,6 +117,7 @@ namespace OmniKassa.Model.Order
                 int hash = 0x51ed270b;
                 hash = (hash * -1521134295) + (IssuerId == null ? 0 : IssuerId.GetHashCode());
                 hash = (hash * -1521134295) + (FastCheckout == null ? 0 : FastCheckout.GetHashCode());
+                hash = (hash * -1521134295) + (EnableCardOnFile == null ? 0 : EnableCardOnFile.GetHashCode());
                 return hash;
             }
         }
@@ -127,6 +136,11 @@ namespace OmniKassa.Model.Order
             /// Fast checkout configuration.
             /// </summary>
             public FastCheckout FastCheckout { get; private set; }
+
+            /// <summary>
+            /// Use card on file.
+            /// </summary>
+            public Boolean EnableCardOnFile { get; private set; }
 
             /// <summary>
             /// Sets the issuer ID for iDEAL transactions.
@@ -152,6 +166,17 @@ namespace OmniKassa.Model.Order
             public Builder WithFastCheckout(FastCheckout fastCheckout)
             {
                 FastCheckout = fastCheckout;
+                return this;
+            }
+
+            /// <summary>
+            /// Setsh the use card on file property.
+            /// </summary>
+            /// <param name="enableCardOnFile">The cards on file property</param>
+            /// <returns>Builder</returns>
+            public Builder WithEnableCardOnFile(Boolean enableCardOnFile)
+            {
+                EnableCardOnFile = enableCardOnFile;
                 return this;
             }
 
