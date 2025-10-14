@@ -28,6 +28,7 @@
 
 @{Html.RenderPartial("OrderItems");}
 @{Html.RenderPartial("OrderDetails");}
+<br />
 
 <form method="get" action="/Home/InitiateRefund" name="initiate_refund">
     <input type="submit" value="Initiate refund" id="initiate_refund_request">
@@ -130,20 +131,23 @@
     {
         foreach (var cardOnFile in Model.GetCardsOnFile())
         {
-            <tr>
-                <td style="padding-right: 16pt;">@cardOnFile.Id</td>
-                <td style="padding-right: 16pt;">@cardOnFile.Brand</td>
-                <td style="padding-right: 16pt;">@cardOnFile.Last4Digits</td>
-                <td style="padding-right: 16pt;">@cardOnFile.CardExpiry</td>
-                <td style="padding-right: 16pt;">@cardOnFile.Status</td>
-                <td style="padding-right: 16pt;">
-                    <form method="post" action="/Home/DeleteShopperPaymentDetail" name="delete_shopper_payment_details">
-                        <input type="hidden" name="shopperReference" id="shopper_reference" value="@ViewBag.ShopperReference" />
-                        <input type="hidden" name="id" id="id" value="@cardOnFile.Id" />
-                        <input type="submit" value="Delete" id="retrieve_ideal_issuers">
-                    </form>
-                </td>
-            </tr>
+            <form method="post" action="/Home/DeleteShopperPaymentDetail" name="delete_shopper_payment_details">
+                <tr>
+                    <td style="padding-right: 16pt;"><i>@ViewBag.ShopperReference</i></td>
+                    <td style="padding-right: 16pt;">@cardOnFile.Id</td>
+                    <td style="padding-right: 16pt;">@cardOnFile.Brand</td>
+                    <td style="padding-right: 16pt;">@cardOnFile.Last4Digits</td>
+                    <td style="padding-right: 16pt;">@cardOnFile.CardExpiry</td>
+                    <td style="padding-right: 16pt;">@cardOnFile.Status</td>
+                    <td style="padding-right: 16pt;">
+                        <form method="post" action="/Home/DeleteShopperPaymentDetail" name="delete_shopper_payment_details">
+                            <input type="hidden" name="shopperReference" id="shopper_reference" value="@ViewBag.ShopperReference" />
+                            <input type="hidden" name="id" id="id" value="@cardOnFile.Id" />
+                            <input type="submit" value="Delete" id="retrieve_ideal_issuers">
+                        </form>
+                    </td>
+                </tr>
+            </form>
         }
     }
 </table>

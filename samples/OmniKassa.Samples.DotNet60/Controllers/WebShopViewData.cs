@@ -122,5 +122,33 @@ namespace example_dotnet60.Controllers
             }
             return items;
         }
+
+        public static List<SelectListItem> GetShippingCostCurrencyItems(MerchantOrder order)
+        {
+            var items = new List<SelectListItem>()
+            {
+                new SelectListItem() { Text = "", Value = "" }
+            };
+            var currency = order.ShippingCost?.Currency;
+            foreach (Currency item in typeof(Currency).GetEnumValues())
+            {
+                var isSelected = false;
+                if (currency != null)
+                {
+                    isSelected = item == currency;
+                }
+                else
+                {
+                    isSelected = item == Currency.EUR;
+                }
+                items.Add(new SelectListItem()
+                {
+                    Value = item.ToString(),
+                    Text = item.ToString(),
+                    Selected = isSelected
+                });
+            }
+            return items;
+        }
     }
 }

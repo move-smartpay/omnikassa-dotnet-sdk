@@ -17,6 +17,7 @@ using Endpoint = OmniKassa.Endpoint;
 using example_dotnet60.Models;
 using example_dotnet60.Helpers;
 using OmniKassa.Model.Request;
+using System.Linq;
 
 namespace example_dotnet60.Controllers
 {
@@ -155,6 +156,8 @@ namespace example_dotnet60.Controllers
             ViewBag.RequiredCheckoutFieldsCustomerInformation = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.CUSTOMER_INFORMATION) ?? false;
             ViewBag.RequiredCheckoutFieldsBillingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.BILLING_ADDRESS) ?? false;
             ViewBag.RequiredCheckoutFieldsShippingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.SHIPPING_ADDRESS) ?? false;
+            ViewBag.ShippingCostCurrencyItems = WebShopViewData.GetShippingCostCurrencyItems(model.Order);
+            ViewBag.ShippingCostAmount = model.Order.ShippingCost?.Amount;
         }
 
         [HttpPost]
@@ -184,9 +187,18 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
             webShopModel.PaymentCompleted = null;
 
+            var collection = GetCollection(Request.Form);
+            
+            var isFastCheckout = collection.AllKeys.Contains("submitFastCheckout");
+            if (isFastCheckout)
+            {
+                collection["paymentBrandForce"] = PaymentBrandForce.FORCE_ALWAYS.ToString();
+                collection["paymentBrand"] = PaymentBrand.IDEAL.ToString();
+            }
+
             try
             {
-                webShopModel.Order = OrderHelper.PrepareOrder(GetCollection(Request.Form), webShopModel);
+                webShopModel.Order = OrderHelper.PrepareOrder(collection, webShopModel);
                 if (webShopModel.Order != null)
                 {
                     MerchantOrderResponse response = await omniKassa.Announce(webShopModel.Order);
@@ -398,7 +410,8 @@ namespace example_dotnet60.Controllers
                 .WithLanguage(Language.NL)
                 .WithMerchantReturnURL(RETURN_URL)
                 .WithInitiatingParty("LIGHTSPEED")
-                .WithShopperReference(SHOPPER_REFERENCE);
+                .WithShopperReference(SHOPPER_REFERENCE)
+                .WithShippingCost(Currency.EUR, 0.00m);
 
             return order;
         }

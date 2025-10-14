@@ -81,6 +81,8 @@ namespace example_dotnet60.Helpers
             string shopperBankstatementReference = GetShopperBankstatementReference(collection);
             bool enableCardOnFile = GetEnableCardOnFile(collection);
             string shopperReference = GetShopperReference(collection);
+            Decimal? shippingCostAmount = GetShippingCostAmount(collection);
+            Currency? shippingCostCurrency = GetShippingCostCurrency(collection);
 
             var merchantOrder = model.PrepareMerchantOrder(
                 totalPrice,
@@ -94,7 +96,9 @@ namespace example_dotnet60.Helpers
                 skipHppResultPage,
                 shopperBankstatementReference,
                 enableCardOnFile,
-                shopperReference
+                shopperReference,
+                shippingCostAmount,
+                shippingCostCurrency
             );
 
             return merchantOrder;
@@ -152,7 +156,9 @@ namespace example_dotnet60.Helpers
         {
             String paymentBrandForce = collection.Get("paymentBrandForce");
             if (String.IsNullOrEmpty(paymentBrandForce))
+            {
                 return null;
+            }
             return GetEnum<PaymentBrandForce>(paymentBrandForce);
         }
 
@@ -224,6 +230,26 @@ namespace example_dotnet60.Helpers
         public static string GetShopperReference(NameValueCollection collection)
         {
             return collection.Get("shopperReference");
+        }
+
+        public static Decimal? GetShippingCostAmount(NameValueCollection collection)
+        {
+            var amount = collection.Get("shippingCostAmount");
+            if (String.IsNullOrEmpty(amount))
+            {
+                return null;
+            }
+            return Convert.ToDecimal(amount);
+        }
+
+        public static Currency? GetShippingCostCurrency(NameValueCollection collection)
+        {
+            var currency = collection.Get("shippingCostCurrency");
+            if (String.IsNullOrEmpty(currency))
+            {
+                return null;
+            }
+            return GetEnum<Currency>(currency);
         }
 
         public static T GetEnum<T>(String value)
