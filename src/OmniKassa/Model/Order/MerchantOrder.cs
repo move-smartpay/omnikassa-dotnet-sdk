@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OmniKassa.Model.Enums;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace OmniKassa.Model.Order
 {
@@ -561,6 +562,23 @@ namespace OmniKassa.Model.Order
             {
                 this.ShippingCost = shippingCost;
                 return this;
+            }
+
+            /// <summary>
+            /// Order shipping cost. Only used for display purposes. Does not influence order total.
+            /// </summary>
+            /// <param name="currency">Shipping cost currency</param>
+            /// <param name="amount">Shipping cost amount</param>
+            /// <returns>Builder</returns>
+            public Builder WithShippingCost(Currency? currency, Decimal? amount)
+            {
+                if (amount is Decimal finalAmount
+                    && currency is Currency finalCurrency)
+                {
+                    var money = Money.FromDecimal(finalCurrency, finalAmount);
+                    return WithShippingCost(money);
+                }
+                return null;
             }
 
             /// <summary>

@@ -104,7 +104,9 @@ namespace example_dotnet60.Models
             bool skipHppResultPage,
             string shopperBankstatementReference,
             bool enableCardOnFile,
-            string shopperReference
+            string shopperReference,
+            Decimal? shippingCostAmount,
+            Currency? shippingCostCurrency
         ) {
             var builder = MerchantOrderBuilder
                 .WithAmount(Money.FromDecimal(Currency.EUR, totalPrice))
@@ -119,7 +121,8 @@ namespace example_dotnet60.Models
                 .WithInitiatingParty(initiatingParty)
                 .WithSkipHppResultPage(skipHppResultPage)
                 .WithShopperBankstatementReference(shopperBankstatementReference)
-                .WithShopperReference(shopperReference);
+                .WithShopperReference(shopperReference)
+                .WithShippingCost(shippingCostCurrency, shippingCostAmount);
 
             return builder.Build();
         }
@@ -161,6 +164,16 @@ namespace example_dotnet60.Models
                 return CardsOnFile;
             }
             return new List<CardOnFile>();
+        }
+
+        public Decimal GetShippingCostAmount()
+        {
+            return MerchantOrderBuilder.ShippingCost.Amount; 
+        }
+
+        public Currency GetShippingCostCurrency()
+        {
+            return MerchantOrderBuilder.ShippingCost.Currency;
         }
     }
 }

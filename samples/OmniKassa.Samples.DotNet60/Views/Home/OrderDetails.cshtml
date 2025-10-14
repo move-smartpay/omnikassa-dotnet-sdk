@@ -59,6 +59,24 @@
         </tr>
     </table>
     <br />
+    <h4>Shipping costs</h4>
+    <table>
+        <tr>
+            <td>
+                <label for="shipping_cost_amount">Shipping cost amount:</label>
+                <input type="text" name="shippingCostAmount" id="shipping_cost_amount" value="@ViewBag.ShippingCostAmount">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="shipping_cost_currency">Shipping cost currency</label>
+                <select name="shippingCostCurrency" id="shipping_cost_currency" asp-items="@ViewBag.ShippingCostCurrencyItems">
+                </select>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <h4>Payment information</h4>
     <table>
         <tr>
             <td>
@@ -132,7 +150,8 @@
         </tr>
         <tr>
             <td>
-                <input type="submit" value="Place order" id="place_order">
+                <input type="submit" name="submitPlaceOrder" value="Place Order" id="place_order">
+                <input type="submit" name="submitFastCheckout" value="Fast Checkout" id="fast_checkout">
             </td>
         </tr>
     </table>
