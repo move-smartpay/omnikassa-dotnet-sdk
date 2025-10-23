@@ -59,7 +59,6 @@
             }
         }
     }
-
 </table>
 <br />
 <form method="post" action="/Home/RetrieveUpdates" name="order">
@@ -120,6 +119,7 @@
 
 <table>
     <tr>
+        <td style="padding-right: 16pt;"><b>Shopper Reference</b></td>
         <td style="padding-right: 16pt;"><b>Id</b></td>
         <td style="padding-right: 16pt;"><b>Brand</b></td>
         <td style="padding-right: 16pt;"><b>Card No.</b></td>
@@ -133,18 +133,18 @@
         {
             <form method="post" action="/Home/DeleteShopperPaymentDetail" name="delete_shopper_payment_details">
                 <tr>
-                    <td style="padding-right: 16pt;"><i>@ViewBag.ShopperReference</i></td>
-                    <td style="padding-right: 16pt;">@cardOnFile.Id</td>
+                    <td style="padding-right: 16pt;"><i>
+                        <input type="text" name="shopperReference" id="shopper_reference" readonly value="@ViewBag.ShopperReference" />
+                    </i></td>
+                    <td style="padding-right: 16pt;"><i>
+                        <input type="text" name="id" id="id" readonly value="@cardOnFile.Id" />
+                    </i></td>
                     <td style="padding-right: 16pt;">@cardOnFile.Brand</td>
                     <td style="padding-right: 16pt;">@cardOnFile.Last4Digits</td>
                     <td style="padding-right: 16pt;">@cardOnFile.CardExpiry</td>
                     <td style="padding-right: 16pt;">@cardOnFile.Status</td>
                     <td style="padding-right: 16pt;">
-                        <form method="post" action="/Home/DeleteShopperPaymentDetail" name="delete_shopper_payment_details">
-                            <input type="hidden" name="shopperReference" id="shopper_reference" value="@ViewBag.ShopperReference" />
-                            <input type="hidden" name="id" id="id" value="@cardOnFile.Id" />
-                            <input type="submit" value="Delete" id="retrieve_ideal_issuers">
-                        </form>
+                        <input type="submit" value="Delete" id="retrieve_ideal_issuers">
                     </td>
                 </tr>
             </form>
