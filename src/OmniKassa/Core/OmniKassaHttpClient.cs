@@ -167,7 +167,11 @@ namespace OmniKassa.Http
         /// <returns>Order status response</returns>
         public Task<OrderStatusResponse> GetOrderById(String orderId, String token)
         {
-            string path = string.Format(PATH_GET_ORDER_BY_ID, orderId);
+            var uriBuilder = new UriBuilder(mClient.BaseAddress)
+            {
+                Path = string.Format(PATH_GET_ORDER_BY_ID, Uri.EscapeDataString(orderId)),
+            };
+            string path = uriBuilder.Uri.PathAndQuery;
             return GetAsync<OrderStatusResponse>(mClient, path, token);
         }
 

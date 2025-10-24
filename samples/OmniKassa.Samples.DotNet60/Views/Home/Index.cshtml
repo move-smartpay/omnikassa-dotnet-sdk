@@ -68,7 +68,6 @@
 
 <table>
     <tr>
-        <td style="padding-right: 16pt;"><b>OmniKassa Order ID</b></td>
         <td style="padding-right: 16pt;"><b>ID</b></td>
         <td style="padding-right: 16pt;"><b>Start Time</b></td>
         <td style="padding-right: 16pt;"><b>Last Update Time</b></td>
@@ -83,14 +82,13 @@
         foreach (TransactionInfo transaction in Model.OrderStatusResult.Transactions)
         {
             <tr>
-                <td style="padding-right: 16pt;">@ViewBag.OmniKassaOrderId</td>
                 <td style="padding-right: 16pt;">@transaction.Id</td>
                 <td style="padding-right: 16pt;">@transaction.StartTime</td>
                 <td style="padding-right: 16pt;">@transaction.LastUpdateTime</td>
                 <td style="padding-right: 16pt;">@transaction.Type</td>
                 <td style="padding-right: 16pt;">@transaction.Status</td>
                 <td style="padding-right: 16pt;">@transaction.PaymentBrand</td>
-                <td style="padding-right: 16pt;">@transaction.Amount</td>
+                <td style="padding-right: 16pt;">@(transaction.Amount.Amount)&nbsp;@(transaction.Amount.Currency)</td>
                 <td style="padding-right: 16pt;">@transaction.ConfirmedAmount</td>
             </tr>
         }

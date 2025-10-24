@@ -39,6 +39,8 @@ namespace example_dotnet60.Models
 
         public string Error { get; set; }
 
+        public string OmniKassaOrderId { get; set; } = "";
+
         public WebShopModel()
         {
 
