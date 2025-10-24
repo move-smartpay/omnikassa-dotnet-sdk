@@ -68,12 +68,6 @@ namespace example_dotnet60.Controllers
                 FAST_CHECKOUT_RETURN_URL = fastCheckoutReturnUrl;
             }
 
-            var shopperReference = configurationParameters.ShopperReference;
-            if (!string.IsNullOrEmpty(shopperReference))
-            {
-                SHOPPER_REFERENCE = shopperReference;
-            }
-
             if (omniKassa == null)
             {
                 InitializeOmniKassaEndpoint();
@@ -153,13 +147,23 @@ namespace example_dotnet60.Controllers
             ViewBag.BillingDetails = model.Order.BillingDetails;
             ViewBag.BillingAddressCountryItems = WebShopViewData.GetBillingAddressCountryItems(model.Order);
             ViewBag.EnableCardOnFile = model.Order.PaymentBrandMetaDataObject?.EnableCardOnFile ?? false;
-            ViewBag.ShopperReference = model.Order.ShopperReference;
             ViewBag.RequiredCheckoutFieldsCustomerInformation = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.CUSTOMER_INFORMATION) ?? false;
             ViewBag.RequiredCheckoutFieldsBillingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.BILLING_ADDRESS) ?? false;
             ViewBag.RequiredCheckoutFieldsShippingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.SHIPPING_ADDRESS) ?? false;
             ViewBag.ShippingCostCurrencyItems = WebShopViewData.GetShippingCostCurrencyItems(model.Order);
             ViewBag.ShippingCostAmount = model.Order.ShippingCost?.Amount;
             ViewBag.OmniKassaOrderId = omniKassaOrderId;
+
+            if (!String.IsNullOrEmpty(model.Order.ShopperReference))
+            {
+                var shopperReference = model.Order.ShopperReference;
+                model.ShopperReference = shopperReference;
+                ViewBag.ShopperReference = shopperReference;
+            }
+            else
+            {
+                ViewBag.ShopperReference = model.ShopperReference;
+            }
         }
 
         [HttpPost]
@@ -189,7 +193,7 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
             webShopModel.PaymentCompleted = null;
 
-            var collection = GetCollection(Request.Form);
+            NameValueCollection collection = GetCollection(Request.Form);
             
             var isFastCheckout = collection.AllKeys.Contains("submitFastCheckout");
             if (isFastCheckout)
@@ -197,6 +201,8 @@ namespace example_dotnet60.Controllers
                 collection["paymentBrandForce"] = PaymentBrandForce.FORCE_ALWAYS.ToString();
                 collection["paymentBrand"] = PaymentBrand.IDEAL.ToString();
             }
+
+            webShopModel.ShopperReference = collection.Get("shopperReference");
 
             try
             {
@@ -440,8 +446,14 @@ namespace example_dotnet60.Controllers
                 .Build();
 
             PaymentBrandMetaData paymentBrandMetaData = new PaymentBrandMetaData.Builder()
-                .WithEnableCardOnFile(true)
+                .WithEnableCardOnFile(false)
                 .Build();
+
+            var shopperReference = "";
+            if (webShopModel != null)
+            {
+                shopperReference = webShopModel.ShopperReference;
+            }
 
             MerchantOrder.Builder order = new MerchantOrder.Builder()
                 .WithMerchantOrderId(Convert.ToString(orderId))
@@ -452,7 +464,7 @@ namespace example_dotnet60.Controllers
                 .WithLanguage(Language.NL)
                 .WithMerchantReturnURL(RETURN_URL)
                 .WithInitiatingParty("LIGHTSPEED")
-                .WithShopperReference(SHOPPER_REFERENCE)
+                .WithShopperReference(shopperReference)
                 .WithPaymentBrandMetaData(paymentBrandMetaData)
                 .WithShippingCost(Currency.EUR, 0.01m);
 
@@ -524,7 +536,10 @@ namespace example_dotnet60.Controllers
             try
             {
                 NameValueCollection collection = GetCollection(Request.Form);
-                string shopperReference = collection.Get("shopperReference");
+                
+                var shopperReference = collection.Get("shopperReference");
+                webShopModel.ShopperReference = shopperReference;
+                
                 ShopperPaymentDetailsResponse response = await omniKassa.RetrieveShopperPaymentDetails(shopperReference);
                 webShopModel.CardsOnFile = response.CardOnFileList;
             }

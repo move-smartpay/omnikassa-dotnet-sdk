@@ -35,6 +35,8 @@ namespace example_dotnet60.Models
 
         public List<CardOnFile> CardsOnFile { get; set; } = new List<CardOnFile>();
 
+        public string ShopperReference { get; set; } = "";
+
         public string Error { get; set; }
 
         public WebShopModel()
