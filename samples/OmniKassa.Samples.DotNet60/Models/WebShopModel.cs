@@ -14,17 +14,23 @@ namespace example_dotnet60.Models
         public MerchantOrder.Builder MerchantOrderBuilder { get; set; }
 
         public MerchantOrder Order { get; set; }
+        
         public int OrderId { get; set; }
+        
         public string MerchantReturnUrl { get; set; }
 
         public PaymentCompletedResponse PaymentCompleted { get; set; }
+        
         public List<MerchantOrderStatusResponse> Responses { get; set; } = new List<MerchantOrderStatusResponse>();
+
+        public OrderStatusResult OrderStatusResult { get; set; }
 
         public PaymentBrandsResponse PaymentBrandsResponse { get; set; }
 
         public IdealIssuersResponse IdealIssuersResponse { get; set; }
 
         public RefundDetailsResponse RefundDetailsResponse { get; set; }
+        
         public TransactionRefundableDetailsResponse TransactionRefundableDetailsResponse { get; set; }
 
         public List<CardOnFile> CardsOnFile { get; set; } = new List<CardOnFile>();

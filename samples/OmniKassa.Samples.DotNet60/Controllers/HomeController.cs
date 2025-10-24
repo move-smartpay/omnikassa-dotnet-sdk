@@ -270,6 +270,36 @@ namespace example_dotnet60.Controllers
         {
             InitWebshopModel();
 
+            if (notification != null)
+            {
+                try
+                {
+                    MerchantOrderStatusResponse response = null;
+                    do
+                    {
+                        response = await omniKassa.RetrieveAnnouncement(notification);
+                        webShopModel.Responses.Add(response);
+                    } while (response.MoreOrderResultsAvailable);
+                }
+                catch (RabobankSdkException ex)
+                {
+                    webShopModel.Error = ex.Message;
+                }
+            }
+            else
+            {
+                webShopModel.Error = "Order status notification not yet received.";
+            }
+
+            PopulateViewData(webShopModel);
+            return View("Index", webShopModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RetrieveOrder()
+        {
+            InitWebshopModel();
+
             NameValueCollection collection = GetCollection(Request.Form);
             var OmniKassaOrderId = collection.Get("omniKassaOrderId");
 
@@ -291,34 +321,12 @@ namespace example_dotnet60.Controllers
                     return View("Index", webShopModel);
                 }
 
-                // TODO: Show the updates here!
-
+                webShopModel.OrderStatusResult = response.Order;
             }
             catch (RabobankSdkException ex)
             {
                 webShopModel.Error = ex.Message;
             }
-
-            /*if (notification != null)
-            {
-                try
-                {
-                    MerchantOrderStatusResponse response = null;
-                    do
-                    {
-                        response = await omniKassa.RetrieveAnnouncement(notification);
-                        webShopModel.Responses.Add(response);
-                    } while (response.MoreOrderResultsAvailable);
-                }
-                catch (RabobankSdkException ex)
-                {
-                    webShopModel.Error = ex.Message;
-                }
-            }
-            else
-            {
-                webShopModel.Error = "Order status notification not yet received.";
-            }*/
 
             PopulateViewData(webShopModel);
             return View("Index", webShopModel);

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using OmniKassa.Model.Response
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -59,7 +61,43 @@
     }
 </table>
 <br />
-<form method="post" action="/Home/RetrieveUpdates" name="order">
+<form method="post" action="/Home/RetrieveUpdates" name="updates">
+    <input type="submit" value="Retrieve updates" id="retrieve_updates">
+</form>
+<br />
+
+<table>
+    <tr>
+        <td style="padding-right: 16pt;"><b>OmniKassa Order ID</b></td>
+        <td style="padding-right: 16pt;"><b>ID</b></td>
+        <td style="padding-right: 16pt;"><b>Start Time</b></td>
+        <td style="padding-right: 16pt;"><b>Last Update Time</b></td>
+        <td style="padding-right: 16pt;"><b>Type</b></td>
+        <td style="padding-right: 16pt;"><b>Status</b></td>
+        <td style="padding-right: 16pt;"><b>Payment Brand</b></td>
+        <td style="padding-right: 16pt;"><b>Amount</b></td>
+        <td style="padding-right: 16pt;"><b>Confirmed Amount</b></td>
+    </tr>
+    @if (Model != null && Model.OrderStatusResult != null)
+    {
+        foreach (TransactionInfo transaction in Model.OrderStatusResult.Transactions)
+        {
+            <tr>
+                <td style="padding-right: 16pt;">@ViewBag.OmniKassaOrderId</td>
+                <td style="padding-right: 16pt;">@transaction.Id</td>
+                <td style="padding-right: 16pt;">@transaction.StartTime</td>
+                <td style="padding-right: 16pt;">@transaction.LastUpdateTime</td>
+                <td style="padding-right: 16pt;">@transaction.Type</td>
+                <td style="padding-right: 16pt;">@transaction.Status</td>
+                <td style="padding-right: 16pt;">@transaction.PaymentBrand</td>
+                <td style="padding-right: 16pt;">@transaction.Amount</td>
+                <td style="padding-right: 16pt;">@transaction.ConfirmedAmount</td>
+            </tr>
+        }
+    }
+</table>
+<br />
+<form method="post" action="/Home/RetrieveOrder" name="order">
     <table>
         <tr>
             <td>
@@ -68,7 +106,7 @@
             </td>
         </tr>
     </table>
-    <input type="submit" value="Retrieve updates" id="retrieve_updates">
+    <input type="submit" value="Retrieve order" id="retrieve_order">
 </form>
 <br />
 
