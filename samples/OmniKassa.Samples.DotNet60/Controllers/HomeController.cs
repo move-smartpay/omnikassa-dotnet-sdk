@@ -40,7 +40,6 @@ namespace example_dotnet60.Controllers
         private WebShopModel webShopModel;
         private int orderItemId = 0;
 
-        private static string omniKassaOrderId = null;
         private static ApiNotification notification;
 
         public HomeController(ConfigurationParameters configurationParameters)
@@ -152,7 +151,7 @@ namespace example_dotnet60.Controllers
             ViewBag.RequiredCheckoutFieldsShippingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.SHIPPING_ADDRESS) ?? false;
             ViewBag.ShippingCostCurrencyItems = WebShopViewData.GetShippingCostCurrencyItems(model.Order);
             ViewBag.ShippingCostAmount = model.Order.ShippingCost?.Amount;
-            ViewBag.OmniKassaOrderId = omniKassaOrderId;
+            ViewBag.OmniKassaOrderId = model.OmniKassaOrderId;
 
             if (!String.IsNullOrEmpty(model.Order.ShopperReference))
             {
@@ -210,7 +209,8 @@ namespace example_dotnet60.Controllers
                 if (webShopModel.Order != null)
                 {
                     MerchantOrderResponse response = await omniKassa.Announce(webShopModel.Order);
-                    omniKassaOrderId = response.OmnikassaOrderId;
+                    string omniKassaOrderId = response.OmnikassaOrderId;
+                    webShopModel.OmniKassaOrderId = omniKassaOrderId;
                     ViewBag.OmniKassaOrderId = omniKassaOrderId;
 
                     AssignNewOrder();
@@ -307,9 +307,11 @@ namespace example_dotnet60.Controllers
             InitWebshopModel();
 
             NameValueCollection collection = GetCollection(Request.Form);
-            var OmniKassaOrderId = collection.Get("omniKassaOrderId");
+            string omniKassaOrderId = collection.Get("omniKassaOrderId");
+            webShopModel.OmniKassaOrderId = omniKassaOrderId;
+            ViewBag.OmniKassaOrderId = omniKassaOrderId;
 
-            if (String.IsNullOrEmpty(OmniKassaOrderId))
+            if (String.IsNullOrEmpty(omniKassaOrderId))
             {
                 webShopModel.Error = "No OmniKassa Order ID known";
                 PopulateViewData(webShopModel);
@@ -318,11 +320,11 @@ namespace example_dotnet60.Controllers
 
             try
             {
-                OrderStatusResponse response = await omniKassa.RetrieveOrder(OmniKassaOrderId);
+                OrderStatusResponse response = await omniKassa.RetrieveOrder(omniKassaOrderId);
 
                 if (response == null)
                 {
-                    webShopModel.Error = "No data for OmniKassa Order with ID " + OmniKassaOrderId;
+                    webShopModel.Error = "No data for OmniKassa Order with ID " + omniKassaOrderId;
                     PopulateViewData(webShopModel);
                     return View("Index", webShopModel);
                 }
