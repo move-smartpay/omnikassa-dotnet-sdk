@@ -40,6 +40,7 @@ namespace example_dotnet60.Controllers
         private WebShopModel webShopModel;
         private int orderItemId = 0;
 
+        private static string omniKassaOrderId = null;
         private static ApiNotification notification;
 
         public HomeController(ConfigurationParameters configurationParameters)
@@ -158,6 +159,7 @@ namespace example_dotnet60.Controllers
             ViewBag.RequiredCheckoutFieldsShippingAddress = model.Order.PaymentBrandMetaDataObject?.FastCheckout?.HasRequiredCheckoutFields(RequiredCheckoutFields.SHIPPING_ADDRESS) ?? false;
             ViewBag.ShippingCostCurrencyItems = WebShopViewData.GetShippingCostCurrencyItems(model.Order);
             ViewBag.ShippingCostAmount = model.Order.ShippingCost?.Amount;
+            ViewBag.OmniKassaOrderId = omniKassaOrderId;
         }
 
         [HttpPost]
@@ -202,6 +204,9 @@ namespace example_dotnet60.Controllers
                 if (webShopModel.Order != null)
                 {
                     MerchantOrderResponse response = await omniKassa.Announce(webShopModel.Order);
+                    omniKassaOrderId = response.OmnikassaOrderId;
+                    ViewBag.OmniKassaOrderId = omniKassaOrderId;
+
                     AssignNewOrder();
                     StoreWebshopModel();
 
@@ -284,6 +289,43 @@ namespace example_dotnet60.Controllers
             else
             {
                 webShopModel.Error = "Order status notification not yet received.";
+            }
+
+            PopulateViewData(webShopModel);
+            return View("Index", webShopModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RetrieveOrder()
+        {
+            InitWebshopModel();
+
+            NameValueCollection collection = GetCollection(Request.Form);
+            var OmniKassaOrderId = collection.Get("omniKassaOrderId");
+
+            if (String.IsNullOrEmpty(OmniKassaOrderId))
+            {
+                webShopModel.Error = "No OmniKassa Order ID known";
+                PopulateViewData(webShopModel);
+                return View("Index", webShopModel);
+            }
+
+            try
+            {
+                OrderStatusResponse response = await omniKassa.RetrieveOrder(OmniKassaOrderId);
+
+                if (response == null)
+                {
+                    webShopModel.Error = "No data for OmniKassa Order with ID " + OmniKassaOrderId;
+                    PopulateViewData(webShopModel);
+                    return View("Index", webShopModel);
+                }
+
+                webShopModel.OrderStatusResult = response.Order;
+            }
+            catch (RabobankSdkException ex)
+            {
+                webShopModel.Error = ex.Message;
             }
 
             PopulateViewData(webShopModel);
@@ -411,7 +453,8 @@ namespace example_dotnet60.Controllers
                 .WithMerchantReturnURL(RETURN_URL)
                 .WithInitiatingParty("LIGHTSPEED")
                 .WithShopperReference(SHOPPER_REFERENCE)
-                .WithShippingCost(Currency.EUR, 0.00m);
+                .WithPaymentBrandMetaData(paymentBrandMetaData)
+                .WithShippingCost(Currency.EUR, 0.01m);
 
             return order;
         }

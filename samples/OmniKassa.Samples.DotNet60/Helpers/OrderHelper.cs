@@ -42,15 +42,15 @@ namespace example_dotnet60.Helpers
             Money tax = Money.FromDecimal(Currency.EUR, Decimal.Round(taxDecimal, 2));
 
             return new OrderItem.Builder()
-                    .WithId(Convert.ToString(orderItemId))
-                    .WithQuantity(Convert.ToInt32(quantity))
-                    .WithName(name)
-                    .WithDescription(name)
-                    .WithAmount(amount)
-                    .WithTax(tax)
-                    .WithItemCategory(itemCategory)
-                    .WithVatCategory(vatCategory)
-                    .Build();
+                .WithId(Convert.ToString(orderItemId))
+                .WithQuantity(Convert.ToInt32(quantity))
+                .WithName(name)
+                .WithDescription(name)
+                .WithAmount(amount)
+                .WithTax(tax)
+                .WithItemCategory(itemCategory)
+                .WithVatCategory(vatCategory)
+                .Build();
         }
 
         public static MerchantOrder PrepareOrder(NameValueCollection collection, WebShopModel model)
@@ -107,13 +107,13 @@ namespace example_dotnet60.Helpers
         private static CustomerInformation CreateCustomerInformation(NameValueCollection collection)
         {
             return new CustomerInformation.Builder()
-                        .WithTelephoneNumber(collection.Get("phoneNumber"))
-                        .WithInitials(collection.Get("initials"))
-                        .WithGender(GetEnum<Gender>(collection.Get("gender")))
-                        .WithEmailAddress(collection.Get("email"))
-                        .WithDateOfBirth(collection.Get("birthDate"))
-                        .WithFullName(collection.Get("fullName"))
-                        .Build();
+                .WithTelephoneNumber(collection.Get("phoneNumber"))
+                .WithInitials(collection.Get("initials"))
+                .WithGender(GetEnum<Gender>(collection.Get("gender")))
+                .WithEmailAddress(collection.Get("email"))
+                .WithDateOfBirth(collection.Get("birthDate"))
+                .WithFullName(collection.Get("fullName"))
+                .Build();
         }
 
         private static Address CreateBillingDetails(NameValueCollection collection)
@@ -130,16 +130,16 @@ namespace example_dotnet60.Helpers
         {
             String countryCode = collection.Get(addressType + "CountryCode");
             return new Address.Builder()
-                    .WithFirstName(collection.Get(addressType + "FirstName"))
-                    .WithMiddleName(collection.Get(addressType + "MiddleName"))
-                    .WithLastName(collection.Get(addressType + "LastName"))
-                    .WithStreet(collection.Get(addressType + "Street"))
-                    .WithHouseNumber(collection.Get(addressType + "HouseNumber"))
-                    .WithHouseNumberAddition(collection.Get(addressType + "HouseNumberAddition"))
-                    .WithPostalCode(collection.Get(addressType + "PostalCode"))
-                    .WithCity(collection.Get(addressType + "City"))
-                    .WithCountryCode(GetEnum<CountryCode>(countryCode))
-                    .Build();
+                .WithFirstName(collection.Get(addressType + "FirstName"))
+                .WithMiddleName(collection.Get(addressType + "MiddleName"))
+                .WithLastName(collection.Get(addressType + "LastName"))
+                .WithStreet(collection.Get(addressType + "Street"))
+                .WithHouseNumber(collection.Get(addressType + "HouseNumber"))
+                .WithHouseNumberAddition(collection.Get(addressType + "HouseNumberAddition"))
+                .WithPostalCode(collection.Get(addressType + "PostalCode"))
+                .WithCity(collection.Get(addressType + "City"))
+                .WithCountryCode(GetEnum<CountryCode>(countryCode))
+                .Build();
         }
 
         private static PaymentBrand? CreatePaymentBrand(NameValueCollection collection)
