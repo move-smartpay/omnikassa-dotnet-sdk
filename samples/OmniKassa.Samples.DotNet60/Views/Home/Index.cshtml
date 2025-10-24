@@ -178,10 +178,10 @@
             <form method="post" action="/Home/DeleteShopperPaymentDetail" name="delete_shopper_payment_details">
                 <tr>
                     <td style="padding-right: 16pt;"><i>
-                        <input type="text" name="shopperReference" id="shopper_reference" readonly value="@ViewBag.ShopperReference" />
+                        <input type="text" name="shopperReference" id="shopper_reference" value="@ViewBag.ShopperReference" />
                     </i></td>
                     <td style="padding-right: 16pt;"><i>
-                        <input type="text" name="id" id="id" readonly value="@cardOnFile.Id" />
+                        <input type="text" name="id" id="id" value="@cardOnFile.Id" />
                     </i></td>
                     <td style="padding-right: 16pt;">@cardOnFile.Brand</td>
                     <td style="padding-right: 16pt;">@cardOnFile.Last4Digits</td>
